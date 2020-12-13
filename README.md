@@ -1,1 +1,1 @@
-# emailWebApp
+# EmailWebApp
