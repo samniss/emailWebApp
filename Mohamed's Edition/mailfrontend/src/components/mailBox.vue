@@ -1,16 +1,83 @@
 <template>
-  <div class="mailBox">
+  <div class="MailBox">
     <div class="page">
       <div class="optionsColumn">
         <button id="sendOption">Send Email ✏️</button>
-        <div pageOptionDiv><button class="pageOption">Inbox 📫</button></div>
-        <div pageOptionDiv><button class="pageOption">Trash 🗑️</button></div>
-        <div pageOptionDiv><button class="pageOption">Drafts 📋</button></div>
+        <div pageOptionDiv>
+          <button @click="pageOption = 'Inbox Mail ✉️'" class="pageOption">
+            Inbox 📫
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button @click="pageOption = 'Trash Box🗑️'" class="pageOption">
+            Trash 🗑️
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button class="pageOption">Drafts 📋</button>
+        </div>
         <div pageOptionDiv><button class="pageOption">Contacts 📔</button></div>
         <div pageOptionDiv><button class="pageOption">Folders 📁</button></div>
       </div>
       <div class="displayColumn">
-        <div><h1 id="theInboxTitle">Inbox Mail ✉️</h1></div>
+        <div>
+          <h1 id="theInboxTitle">{{ pageOption }}</h1>
+          <ul class="emailsOperationDiv">
+            <li class="emailsOperationButton">
+              Filter
+              <div class="subMenu-1">
+                <ul>
+                  <button class="menuElement">Subject</button>
+                  <button class="menuElement">Sender</button>
+                </ul>
+              </div>
+            </li>
+            <li class="emailsOperationButton">
+              Sort
+              <div class="subMenu-1">
+                <ul>
+                  <button class="menuElement">Priority</button>
+                  <button class="menuElement">Date</button>
+                  <button class="menuElement">Type</button>
+                </ul>
+              </div>
+            </li>
+            <button
+              class="emailsOperationButton"
+              @click="Seacrh(document.text.value)"
+            >
+              Search<input type="text" id="searchText" value="" />
+            </button>
+          </ul>
+          <div id="pageNumberOptionsDiv">
+            <h2>1 2 3 4</h2>
+            <input
+              type="radio"
+              id="pageNumberOneOption"
+              name="radioButtonPageNumberOption"
+              value="false"
+            />
+            <input
+              type="radio"
+              id="pageNumberTwoOption"
+              name="radioButtonPageNumberOption"
+              value="false"
+            />
+            <input
+              type="radio"
+              id="pageNumbeThreerOption"
+              name="radioButtonPageNumberOption"
+              value="false"
+            />
+            <input
+              type="radio"
+              id="pageNumberFourOption"
+              name="radioButtonPageNumberOption"
+              value="false"
+            />
+          </div>
+          <br />
+        </div>
         <table class="table">
           <tr id="titleRow">
             <td class="checkBoxClass">&nbsp;</td>
@@ -110,13 +177,14 @@
 
 <script>
 export default {
-  name: "mailBox",
+  name: "mailbox",
   data: function () {
     return {
+      pageOption: "Inbox Mail ✉️",
       contacts: [null],
       sender: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
       subject: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
-      priortity: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      priortity: ["d", "d", "d", "d"],
       date: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
       type: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
       checkMark: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
@@ -269,5 +337,78 @@ export default {
   /* used to make the underline between emails */
   border-top: solid;
   border-bottom: rgb(0, 0, 0);
+}
+
+#pageNumberOptionsDiv {
+  line-height: 5px;
+  padding-bottom: 4px;
+  margin-top: 90px;
+  border-radius: 25px;
+  margin-left: 40%;
+  width: 100px;
+  color: rgb(29, 201, 6);
+  border: solid;
+}
+
+.emailsOperationDiv {
+  display: inline-flex;
+  float: left;
+  margin-top: 20px;
+  width: 100%px;
+  color: rgb(226, 40, 211);
+  border: solid;
+  border-radius: 40px;
+  background: blueviolet;
+  height: 10%px;
+}
+.emailsOperationButton {
+  margin-right: 150px;
+  line-height: 30px;
+  float: left;
+  width: 120px;
+  color: rgb(255, 255, 255);
+  border: solid;
+  border-color: brown;
+  border-radius: 20px;
+  background: rgb(235, 74, 74);
+  height: 30px;
+}
+
+.emailsOperationButton:hover {
+  background: rgb(50, 230, 74);
+}
+
+.subMenu-1 {
+  display: none;
+}
+
+.menuElement {
+  float: left;
+  padding-left: 5px;
+  margin-left: 10px;
+  margin-right: 20px;
+  background: cyan;
+  color: black;
+  border: solid;
+  border-radius: 20px;
+  height: 30px;
+}
+
+.emailsOperationButton:hover .subMenu-1 {
+  text-align: left;
+  display: block;
+  position: absolute;
+  border-radius: 20px;
+  border: solid;
+  border-color: brown;
+  background: rgb(241, 103, 103);
+  height: 30px;
+}
+
+#searchText {
+  margin-top: 10%;
+  height: 30px;
+  font-size: 20px;
+  background: whitesmoke;
 }
 </style>
