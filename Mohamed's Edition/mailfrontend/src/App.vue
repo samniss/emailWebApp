@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <mailBox
+    <MailBox
       @Filter="chooseFilter"
       @Sort="chooseSort"
       @Search="chooseSearch"
@@ -11,20 +11,27 @@
 
 
 <script>
-import mailBox from "./components/mailBox.vue";
+import MailBox from "./components/MailBox.vue";
 //const axios = require("axios").default;
 export default {
   name: "App",
   data: function () {
     return {
-      priority: 0, //the default priorrit is 0 , from 1 to 4 for the normal family groups and 5 is for the pormotions emails
       counter: 0,
-      sortKey: null, //to make the designer of this function be able to take the string sorting option from the user
-      searchKey: null, //to make the designer of this function be able to take the string searching option from the user
+      pageOption: "Inbox Mail ✉️",
+      contacts: [null],
+      sender: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      subject: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      priortity: ["d", "d", "d", "d"],
+      date: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      type: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      checkMark: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      sortKey: "null",
+      searchKey: "null",
     };
   },
   components: {
-    mailBox,
+    MailBox,
   },
   methods: {
     chooseFilter: function (p) {
