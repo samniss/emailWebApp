@@ -3,12 +3,23 @@ package eg.edu.alexu.csd.oop.mail;
 public class Email {
 	private boolean Check = false;
 	private String Sender;
-	private String Receiver;
+	private LinkedBasedQ Receiver=new LinkedBasedQ();//Number of receivers won't exceed 1000
 	private String Subject; 
 	private String Date;
 	private String Content; //text
-	private Attachment Attachements;
+
+	private boolean Draft;//A boolean which indicates if the email is saved as draft
+
 	private int Priority; // using adapter design pattern
+
+	public boolean isDraft() {
+		return Draft;
+	}
+
+	public void setDraft(boolean draft) {
+		Draft = draft;
+	}
+
 	public boolean isCheck() {
 		return Check;
 	}
@@ -21,15 +32,13 @@ public class Email {
 	public void setSender(String sender) {
 		Sender = sender;
 	}
-	public String getReceiver() {
-		return Receiver;
-	}
-	public void setReceiver(String receiver) {
-		Receiver = receiver;
-	}
+
 	public String getSubject() {
 		return Subject;
 	}
+
+
+
 	public void setSubject(String subject) {
 		Subject = subject;
 	}
@@ -45,12 +54,7 @@ public class Email {
 	public void setContent(String content) {
 		Content = content;
 	}
-	public Attachment getAttachements() {
-		return Attachements;
-	}
-	public void setAttachements(Attachment attachements) {
-		Attachements = attachements;
-	}
+
 	public int getPriority() {
 		return Priority;
 	}
@@ -58,4 +62,11 @@ public class Email {
 		Priority = priority;
 	}
 
+	public LinkedBasedQ getReceiver() {
+		return Receiver;
+	}
+
+	public void setReceiver(LinkedBasedQ receiver) {
+		Receiver = receiver;
+	}
 }

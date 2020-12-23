@@ -1,0 +1,1 @@
+{"head":{"element":"Hello","next":{"element":"world","next":{"element":"Test","next":{"element":"with","next":{"element":"Five","next":null}}}}},"rear":{"element":"Five","next":null},"size":5}
