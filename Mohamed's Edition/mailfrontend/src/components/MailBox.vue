@@ -26,14 +26,24 @@
           <ul class="emailsOperationDiv">
             <li class="emailsOperationButton">
               Filter
-              <div class="subMenu-1">
+              <div class="subMenu-2">
                 <ul>
-                  <button class="menuElement" @click="Filter('subject')">
+                  <button
+                    class="menuElement"
+                    @click="Filter('subject', 'filterText')"
+                  >
                     Subject
                   </button>
-                  <button class="menuElement" @click="Filter('sender')">
+                  <input type="text" id="filterSearchText" value="" />
+
+                  <br />
+                  <button
+                    class="menuElement"
+                    @click="Filter('sender', 'filterText')"
+                  >
                     Sender
                   </button>
+                  <input type="text" id="filterSearchText" value="" />
                 </ul>
               </div>
             </li>
@@ -204,6 +214,7 @@ export default {
       type: [].fill(null),
       checkMark: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       filterKey: "null",
+      filterText: "ali",
       sortKey: "null",
       searchKey: "null",
       pageNumber: 1,
@@ -211,23 +222,26 @@ export default {
   },
 
   methods: {
-    Filter: function (filterKey) {
+    Filter: function (filterKey, filterText) {
+      this.filterText = filterText;
       if (filterKey === "subject") {
         axios
           .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
           .then((response) => {
             console.log(response.data);
+            var j = 0;
             for (
               var i = (this.pageNumber - 1) * 10;
               i < this.pageNumber * 10;
               i++
             ) {
               console.log(i);
-              this.$set(this.sender, i, response.data[i].userId);
-              this.$set(this.subject, i, response.data[i].title);
-              this.$set(this.priority, i, response.data[i].title);
-              this.$set(this.date, i, response.data[i].userId);
-              this.$set(this.type, i, response.data[i].userId);
+              this.$set(this.sender, j, response.data[i].userId);
+              this.$set(this.subject, j, response.data[i].title);
+              this.$set(this.priority, j, response.data[i].title);
+              this.$set(this.date, j, response.data[i].userId);
+              this.$set(this.type, j, response.data[i].userId);
+              j++;
             }
             console.log(
               "from  : " +
@@ -249,21 +263,23 @@ export default {
           */
 
         console.log("subject");
-      } else {
+      } else if (filterKey === "sender") {
         axios
           .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
           .then((response) => {
             console.log(response.data);
+            var j = 0;
             for (
               var i = (this.pageNumber - 1) * 10;
               i < this.pageNumber * 10;
               i++
             ) {
-              this.$set(this.sender, i, response.data[i].userId);
-              this.$set(this.subject, i, response.data[i].title);
-              this.$set(this.priority, i, response.data[i].userId);
-              this.$set(this.date, i, response.data[i].userId);
-              this.$set(this.type, i, response.data[i].userId);
+              this.$set(this.sender, j, response.data[i].userId);
+              this.$set(this.subject, j, response.data[i].title);
+              this.$set(this.priority, j, response.data[i].userId);
+              this.$set(this.date, j, response.data[i].userId);
+              this.$set(this.type, j, response.data[i].userId);
+              j++;
             }
             console.log(
               "from  : " +
@@ -445,7 +461,7 @@ export default {
 #pageNumberOptionsDiv {
   line-height: 5px;
   padding-bottom: 4px;
-  margin-top: 90px;
+  margin-top: 95px;
   border-radius: 25px;
   margin-left: 40%;
   width: 100px;
@@ -483,6 +499,10 @@ export default {
 
 .subMenu-1 {
   display: none;
+  border-bottom: solid;
+  border-color: brown;
+  border-radius: 20px;
+  background: rgb(235, 74, 74);
 }
 
 .menuElement {
@@ -503,6 +523,7 @@ export default {
 
 .emailsOperationButton:hover .subMenu-1 {
   text-align: left;
+  margin-top: 0px;
   display: block;
   position: absolute;
   border-radius: 20px;
@@ -517,5 +538,33 @@ export default {
   height: 30px;
   font-size: 20px;
   background: whitesmoke;
+}
+
+#filterSearchText {
+  background: whitesmoke;
+  border-radius: 10px;
+}
+
+.subMenu-2 {
+  display: none;
+  float: left;
+  border: solid;
+  border-radius: 20px;
+  border-color: brown;
+  background: rgb(241, 103, 103);
+  width: 220px;
+}
+
+.emailsOperationButton:hover .subMenu-2 {
+  text-align: left;
+  margin-top: 0px;
+  display: block;
+  position: absolute;
+  float: left;
+  border: solid;
+  border-radius: 20px;
+  border-color: brown;
+  background: rgb(241, 103, 103);
+  width: 220px;
 }
 </style>

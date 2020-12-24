@@ -1,17 +1,21 @@
 <template>
   <div id="app">
-    <MailBox
+    <!--<MailBox
       @FilterEmit="chooseFilter"
       @Sort="chooseSort"
       @Search="chooseSearch"
       id="options"
     />
+-->
+    <!--<Login />-->
+    <signUp />
   </div>
 </template>
 
-
 <script>
-import MailBox from "./components/MailBox.vue";
+//import MailBox from "./components/MailBox";
+//import Login from "./components/Login";
+import signUp from "./components/signUp";
 import "./filter.js";
 import "./router.js";
 //const axios = require("axios").default;
@@ -33,7 +37,9 @@ export default {
     };
   },
   components: {
-    MailBox,
+    //MailBox,
+    //Login,
+    signUp,
   },
   methods: {
     chooseFilter: function (sender, subject, priortity, date, type) {
