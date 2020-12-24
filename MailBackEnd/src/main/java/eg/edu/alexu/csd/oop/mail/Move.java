@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -23,18 +25,17 @@ public class Move {
 
         List<String> emailNames = new ArrayList<String>();
         ObjectMapper mapper = new ObjectMapper();
-        updateEmailNames(userEmailAddress, oldFolder, emailName, oldEmailNamesPath);
+        removeEmailName(userEmailAddress, oldFolder, emailName, oldEmailNamesPath);
 
         //Add the emailName to the emailNames json file in the new folder
-        //TODO Assume that the email dates are sorted by the time they move in the new Folder
-        saveNamesWithSorting(userEmailAddress,newFolder,emailName,newEmailNamesPath);
+        addEmailNameWSort(userEmailAddress,newFolder,emailName,newEmailNamesPath);
         //read the email from the old folder and write it to the new folder
-        copyEmail(oldEmailPath,newEmailPath,newEmailFolder);
-        //Delete the email from the old folder
-        deleteEmail(oldEmailFolder,oldEmailPath);
+        moveEmail(oldEmailFolder,newEmailFolder);
     }
 
-    private void updateEmailNames(String userEmailAddress, String oldFolder, String emailName, String oldEmailNamesPath) {
+
+    //Remove the email name from the emailNames.json file in the old folder
+    private void removeEmailName(String userEmailAddress, String oldFolder, String emailName, String oldEmailNamesPath) {
         List<String> emailNames = new ArrayList<String>();
         ObjectMapper mapper = new ObjectMapper();
         Load l = new Load();
@@ -48,18 +49,16 @@ public class Move {
             e.printStackTrace();
         }
     }
-    private void saveNamesWithSorting(String userEmailAddress,String newFolder,String emailName,String newEmailNamesPath){
+    //Add the email name to the emailNames.json file in the new Folder and sort the emailNames.json accroding to date
+    private void addEmailNameWSort(String userEmailAddress,String newFolder,String emailName,String newEmailNamesPath){
+        //Save the new email name in the emailNames.json file in the new folder
         List<String> emailNames=new ArrayList<String>();
         Load l=new Load();
         emailNames = l.loadEmailNames(userEmailAddress, newFolder);
         emailNames.add(emailName);
-        Queue<String> q = new PriorityQueue<>();
-        for (int i = 0; i < emailNames.size(); i++) {
-            q.offer(emailNames.get(i));
-        }
-        for (int i = 0; i < emailNames.size(); i++) {
-            emailNames.set(i, q.poll());
-        }
+
+        //Sorting the emailNames.json file
+        emailNames=sortEmailNames(userEmailAddress,(ArrayList<String>) emailNames);
         ObjectMapper mapper=new ObjectMapper();
         try {
             mapper.writeValue(Paths.get(newEmailNamesPath).toFile(), emailNames);
@@ -67,43 +66,35 @@ public class Move {
             e.printStackTrace();
         }
     }
-    private void copyEmail(String oldEmailPath,String newEmailPath,String newEmailFolder){
-        Email oldEmail = null;
-        ObjectMapper mapper=new ObjectMapper();
-        //Create folder for the email in the new Emails folder(inbox,trash,sent,draft,etc)
-        File f=new File(newEmailFolder);
-        f.mkdir();
+    //Move the email folder from the old folder to the new folder
+    private void moveEmail(String source,String destination){
         try {
-            oldEmail = mapper.readValue(Paths.get(oldEmailPath).toFile(), Email.class);
-            mapper.writeValue(Paths.get(newEmailPath).toFile(), oldEmail);
+            Files.move(Paths.get(source),Paths.get(destination));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-    private void deleteEmail(String oldEmailFolder,String oldEmailPath){
-        File folder = new File(oldEmailFolder);
-        File email=new File(oldEmailPath)
-        if (f.delete()) {
-            System.out.println("The file has been deleted successfully");
-        } else {
-            System.out.println("Couldn't delete the file");
+    private ArrayList<String> sortEmailNames(String userEmailAddress,ArrayList<String> emailNames){
+        //Create a new Arraylist with the dates of the emails only
+
+        ArrayList<LocalDateTime> emailDates=new ArrayList<LocalDateTime>();
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        for(int i=0;i< emailNames.size();i++){
+            emailDates.add(LocalDateTime.parse(emailNames.get(i).substring(0, emailNames.get(i).indexOf(userEmailAddress)),dtf));
         }
-    }
+        Queue<LocalDateTime> dates=new PriorityQueue<LocalDateTime>();
+        for(int i=0;i<emailDates.size();i++){
+            dates.offer(emailDates.get(i));
+        }
+        for(int i=0;i<emailDates.size();i++){
+            emailDates.set(i,dates.poll());
+        }
 
-    //Citation from https://www.baeldung.com/java-copy-directory
-    public static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
-            throws IOException {
-        Files.walk(Paths.get(sourceDirectoryLocation))
-                .forEach(source -> {
-                    Path destination = Paths.get(destinationDirectoryLocation, source.toString()
-                            .substring(sourceDirectoryLocation.length()));
+        ArrayList<String> names=new ArrayList<String>();
+        for(int i=0;i<emailDates.size();i++){
+            names.add(emailDates.get(i).format(dtf).toString()+userEmailAddress);
+        }
+        return names;
 
-                    try {
-                        Paths..(source, destination);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
     }
 }

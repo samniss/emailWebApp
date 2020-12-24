@@ -27,26 +27,15 @@ public class Save {
         }
     }
 
+
+    /*
+   This following function is used to store the name of the emails json files of each user folder
+   For example in the inbox folder there will be a json file which stores the name of each email json file in that folder
+    */
     /**
      *
      * @param email The email to be saved
      */
-    public void saveEmail(Email email){//Save one email
-        if(email.isDraft()){
-            saveEmailAsDraft(email);
-        }
-        else {
-            saveEmailAsSent(email);
-        }
-
-    }
-
-
-   /*
-   This following function is used to store the name of the emails json files of each user folder
-   For example in the inbox folder there will be a json file which stores the name of each email json file in that folder
-    */
-
     /**
      *
      * @param userEmailAddress The email Address of the user for whom the email name is saved(Sender or receiver)
@@ -65,24 +54,33 @@ public class Save {
         }catch(IOException e){//The file is not found and so we will create it
         }
 
-            try{
-                emailNames.add(emailName);//we save the email name as linked list instead of String because later we will need to store
-                //other email names
+        try{
+            emailNames.add(emailName);//we save the email name as linked list instead of String because later we will need to store
+            //other email names
 
-                om.writeValue(Paths.get(savePath).toFile(), emailNames);
-            }catch(IOException e1){
-                e1.printStackTrace();
-            }
+            om.writeValue(Paths.get(savePath).toFile(), emailNames);
+        }catch(IOException e1){
+            e1.printStackTrace();
+        }
 
 
 
     }
 
-    /**
-     *
-     * @param email The draft email to be saved
-     */
-    private void save(Email email,String userEmailAddress,String folderName){
+
+
+
+
+    public void saveEmail(Email email,MultipartFile[] files){//Save one email
+        if(email.isDraft()){
+            saveEmailAsDraft(email,files);
+        }
+        else {
+            saveEmailAsSent(email,files);
+        }
+
+    }
+    private void save(Email email,String userEmailAddress,String folderName,MultipartFile[] files){
         String saveName= email.getDate()+email.getSender();//The name of the json file on pc
         String emailFolder="System\\"+userEmailAddress+"\\"+folderName+"\\"+saveName;
         File f=new File(emailFolder);
@@ -98,33 +96,39 @@ public class Save {
             System.out.println("=====================");
         }
         saveEmailNames(userEmailAddress,email.getSender(),email.getDate(),folderName);
+        saveAttachments(files,userEmailAddress,folderName,saveName);
     }
-    private void saveEmailAsDraft(Email email){
-        save(email,email.getSender(),"Draft");
+
+    /**
+     *
+     * @param email The draft email to be saved
+     */
+    private void saveEmailAsDraft(Email email,MultipartFile[] files){
+        save(email,email.getSender(),"Draft",files);
     }
 
     /**
      *
      * @param email The composed email to be sent
      */
-    private void saveEmailAsSent(Email email){
-        saveForSender(email);
-        saveForReceivers(email);
+    private void saveEmailAsSent(Email email,MultipartFile[] files){
+        saveForSender(email,files);
+        saveForReceivers(email,files);
     }
 
     /**
      *
      * @param email The email which will be saved in the Sent folder of the sender
      */
-    private void saveForSender(Email email){
-        save(email,email.getSender(),"Sent");
+    private void saveForSender(Email email,MultipartFile[] files){
+        save(email,email.getSender(),"Sent",files);
     }
 
     /**
      *
      * @param email The email which will be saved in the Inbox folder of the receivers
      */
-    private void saveForReceivers(Email email){
+    private void saveForReceivers(Email email,MultipartFile[] files){
         String receiverEmailAddress;
         LinkedBasedQ receivers=new LinkedBasedQ();
         receivers=receivers.copy(email.getReceiver());
@@ -132,7 +136,7 @@ public class Save {
 
         for(int i=0;i< size;i++) {
             receiverEmailAddress=(String)receivers.dequeue();
-            save(email,receiverEmailAddress,"Inbox");
+            save(email,receiverEmailAddress,"Inbox",files);
         }
     }
     private void saveAttachment(MultipartFile file,String userEmailAddress,String folderName,String emailName){
@@ -148,10 +152,12 @@ public class Save {
 
 
     }
-    public void saveAttachments(MultipartFile [] files,String userEmailAddress,String folderName,String emailName){
-        for(int i=0;i<files.length;i++){
-            saveAttachment(files[i],userEmailAddress,folderName,emailName);
-        }
+    private void saveAttachments(MultipartFile [] files,String userEmailAddress,String folderName,String emailName){
+       if(files!=null) {
+           for (int i = 0; i < files.length; i++) {
+               saveAttachment(files[i], userEmailAddress, folderName, emailName);
+           }
+       }
     }
     public void createNewUser(String userEmailAddress){
         String path="System\\"+userEmailAddress;

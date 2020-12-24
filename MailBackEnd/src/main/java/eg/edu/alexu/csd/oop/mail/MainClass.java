@@ -20,60 +20,56 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 @SpringBootApplication
 @CrossOrigin
 @RestController
 public class MainClass {
+    Save s = new Save();
+    Load l = new Load();
+    Move m = new Move();
+    ObjectMapper mapper = new ObjectMapper();
+
     public static void main(String args[]) {
-        Save s=new Save();
-        Load l=new Load();
-        Move m=new Move();
+        /*Move m=new Move();
+        m.move("4-12-2020Abdelrahman@MAJ.com","Abdelrahman@MAJ.com","Sent","Trash");*//*
         Email mail=new Email();
-        ObjectMapper mapper=new ObjectMapper();
-        mail.setSender("Abdelrahman@MAJ.com");
-        mail.setDate("1-12-2020");
+        mail.setSender("Mahmoud@MAJ.com");
+        DateTimeFormatter dtf= DateTimeFormatter.ofPattern(" yyyy-MM-dd HH:mm:ss");
+        LocalDateTime ldt=LocalDateTime.now();
+        mail.setDate(ldt.format(dtf));
         LinkedBasedQ q=new LinkedBasedQ();
+        q.enqueue("Abdelrahman@MAJ.com");
         q.enqueue("Ahmed@MAJ.com");
-        q.enqueue("Mahmoud@MAJ.com");
-        String emailName=mail.getDate()+mail.getSender();
-        m.move(emailName,mail.getSender(),"Sent","Trash");
-
-
+        mail.setReceiver(q);
+        Save s=new Save();*/
+        SpringApplication.run(MainClass.class,args);
     }
 
-    @RequestMapping({"save"})
-    public String savings(@RequestParam("files") MultipartFile[] files,@RequestParam("userEmailAddress") String userEmailAddress,@RequestParam("folderName") String folderName,@RequestParam("emailName") String emailName){
-        Save s=new Save();
-        s.saveAttachments(files,userEmailAddress,folderName,emailName);
-        return "Success";
+    @PostMapping("/saveEmail")
+    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] files) {
+        Email email = new Email();
+        try {
+            email = mapper.readValue(mailJson, Email.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        s.saveEmail(email, files);
     }
 
-
-    @PostMapping({"/test"})
-
-    public String test(@RequestBody MultipartFile[] files ){
-
-//        for(int i=0;i<files.size();i++) {
-//            String fileName = "C:\\Users\\AboodKG\\New folder\\Documents\\Desktop" + "\\" + files.get(i).getOriginalFilename();
-//            File f = new File(fileName);
-//            try {
-//                files.get(i).transferTo(f);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                System.out.println("===============================");
-//                System.out.println("Couldn't Transfer");
-//                System.out.println("===============================");
-//            }
-//        }
-        return "Success";
+    @RequestMapping({"/loadEmails"})
+    public ArrayList<Email> loadEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("folderName") String folderName, @RequestParam("page") int page) {
+        return (ArrayList<Email>) l.loadEmails(userEmailAddress, folderName, page);
     }
 
     //Citation from https://www.javainuse.com/spring/boot-file-download with some changes
-    @RequestMapping("/download")
+    //Load an attachment
+    @GetMapping("/downloadAttachment")
 
-    public void download(HttpServletRequest request, HttpServletResponse response,@RequestParam("fileName") String fileName,@RequestParam("userEmailAddress") String userEmailAddress,@RequestParam("folderName") String folderName,@RequestParam("emailName") String emailName) throws IOException {
-        String path="System\\"+userEmailAddress+"\\"+folderName+"\\"+emailName+"\\"+fileName;
+    public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName, @RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("folderName") String folderName, @RequestParam("emailName") String emailName) throws IOException {
+        String path = "System\\" + userEmailAddress + "\\" + folderName + "\\" + emailName + "\\" + fileName;
         File file = new File(path);
         if (file.exists()) {
             //get the mimetype
@@ -84,20 +80,7 @@ public class MainClass {
             }
             response.setContentType(mimeType);
 
-            /**
-             * In a regular HTTP response, the Content-Disposition response header is a
-             * header indicating if the content is expected to be displayed inline in the
-             * browser, that is, as a Web page or as part of a Web page, or as an
-             * attachment, that is downloaded and saved locally.
-             *
-             */
-
-            /**
-             * Here we have mentioned it to show inline
-             */
-            //response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
-
-            //Here we have mentioned it to show as attachment
+            //(Content-Disposition->Attachment)  File is downloaded as an attachment
             response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + file.getName() + "\""));
             response.setContentLength((int) file.length());
 
@@ -110,4 +93,16 @@ public class MainClass {
 
     }
 
-}
+
+    @PostMapping({"/moveEmails"})
+    public void moveEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("emailName") String emailName, @RequestParam("oldFolder") String oldFolder, @RequestParam("newFolder") String newFolder) {
+        m.move(emailName, userEmailAddress, oldFolder, newFolder);
+    }
+
+    @DeleteMapping({"/deleteEmails"})
+    public void deleteEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("emailName") String emailName, @RequestParam("oldFolder") String oldFolder) {
+        m.move(emailName, userEmailAddress, oldFolder, "Trash");
+    }
+
+    }
+
