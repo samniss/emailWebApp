@@ -13,8 +13,9 @@
             Trash 🗑️
           </button>
         </div>
+        <div pageOptionDiv><button class="pageOption">Drafts 📋</button></div>
         <div pageOptionDiv>
-          <button class="pageOption">Drafts 📋</button>
+          <button class="pageOption">Sent 📧</button>
         </div>
         <div pageOptionDiv><button class="pageOption">Contacts 📔</button></div>
         <div pageOptionDiv><button class="pageOption">Folders 📁</button></div>
@@ -27,8 +28,12 @@
               Filter
               <div class="subMenu-1">
                 <ul>
-                  <button class="menuElement">Subject</button>
-                  <button class="menuElement">Sender</button>
+                  <button class="menuElement" @click="Filter('subject')">
+                    Subject
+                  </button>
+                  <button class="menuElement" @click="Filter('sender')">
+                    Sender
+                  </button>
                 </ul>
               </div>
             </li>
@@ -44,7 +49,7 @@
             </li>
             <button
               class="emailsOperationButton"
-              @click="Seacrh(document.text.value)"
+              @click="Seacrh(this.document.text.value)"
             >
               Search<input type="text" id="searchText" value="" />
             </button>
@@ -55,25 +60,29 @@
               type="radio"
               id="pageNumberOneOption"
               name="radioButtonPageNumberOption"
-              value="false"
+              value="true"
+              @click="pageNumber = 1"
             />
             <input
               type="radio"
               id="pageNumberTwoOption"
               name="radioButtonPageNumberOption"
               value="false"
+              @click="pageNumber = 2"
             />
             <input
               type="radio"
               id="pageNumbeThreerOption"
               name="radioButtonPageNumberOption"
               value="false"
+              @click="pageNumber = 3"
             />
             <input
               type="radio"
               id="pageNumberFourOption"
               name="radioButtonPageNumberOption"
               value="false"
+              @click="pageNumber = 4"
             />
           </div>
           <br />
@@ -88,85 +97,89 @@
             <td>Type</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender[0] }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">
+              <input type="checkbox" value="0" @click="checkMark[0] = 1" />
+            </td>
+            <td class="rOption">
+              {{ sender[0] }}
+            </td>
+            <td class="rOption">{{ subject[0] }}</td>
+            <td class="rOption">{{ priority[0] }}</td>
+            <td class="rOption">{{ date[0] }}</td>
+            <td class="rOption">{{ type[0] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[1] }}</td>
+            <td class="rOption">{{ subject[1] }}</td>
+            <td class="rOption">{{ priority[1] }}</td>
+            <td class="rOption">{{ date[1] }}</td>
+            <td class="rOption">{{ type[1] }}</td>
           </tr>
           <tr class="row">
             <td><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[2] }}</td>
+            <td class="rOption">{{ subject[2] }}</td>
+            <td class="rOption">{{ priority[2] }}</td>
+            <td class="rOption">{{ date[2] }}</td>
+            <td class="rOption">{{ type[2] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[3] }}</td>
+            <td class="rOption">{{ subject[3] }}</td>
+            <td class="rOption">{{ priority[3] }}</td>
+            <td class="rOption">{{ date[3] }}</td>
+            <td class="rOption">{{ type[3] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[4] }}</td>
+            <td class="rOption">{{ subject[4] }}</td>
+            <td class="rOption">{{ priority[4] }}</td>
+            <td class="rOption">{{ date[4] }}</td>
+            <td class="rOption">{{ type[4] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[5] }}</td>
+            <td class="rOption">{{ subject[5] }}</td>
+            <td class="rOption">{{ priority[5] }}</td>
+            <td class="rOption">{{ date[5] }}</td>
+            <td class="rOption">{{ type[5] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
 
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[6] }}</td>
+            <td class="rOption">{{ subject[6] }}</td>
+            <td class="rOption">{{ priority[6] }}</td>
+            <td class="rOption">{{ date[6] }}</td>
+            <td class="rOption">{{ type[6] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[7] }}</td>
+            <td class="rOption">{{ subject[7] }}</td>
+            <td class="rOption">{{ priority[7] }}</td>
+            <td class="rOption">{{ date[7] }}</td>
+            <td class="rOption">{{ type[7] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[8] }}</td>
+            <td class="rOption">{{ subject[8] }}</td>
+            <td class="rOption">{{ priority[8] }}</td>
+            <td class="rOption">{{ date[8] }}</td>
+            <td class="rOption">{{ type[8] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
-            <td class="rOption">{{ sender }}</td>
-            <td class="rOption">{{ subject }}</td>
-            <td class="rOption">{{ priority }}</td>
-            <td class="rOption">{{ date }}</td>
-            <td class="rOption">{{ type }}</td>
+            <td class="rOption">{{ sender[9] }}</td>
+            <td class="rOption">{{ subject[9] }}</td>
+            <td class="rOption">{{ priority[9] }}</td>
+            <td class="rOption">{{ date[9] }}</td>
+            <td class="rOption">{{ type[9] }}</td>
           </tr>
         </table>
       </div>
@@ -176,33 +189,123 @@
 </template>
 
 <script>
+import "../filter.js";
+const axios = require("axios").default;
 export default {
-  name: "mailbox",
+  name: "MailBox",
   data: function () {
     return {
       pageOption: "Inbox Mail ✉️",
-      contacts: [null],
-      sender: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
-      subject: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
-      priortity: ["d", "d", "d", "d"],
-      date: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
-      type: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
-      checkMark: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      contacts: [null].fill(null),
+      sender: [].fill(null),
+      subject: [].fill(null),
+      priority: [].fill(null),
+      date: [].fill(null),
+      type: [].fill(null),
+      checkMark: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      filterKey: "null",
       sortKey: "null",
       searchKey: "null",
+      pageNumber: 1,
     };
   },
+
   methods: {
-    Filter() {
-      this.$emit(this.priortity);
+    Filter: function (filterKey) {
+      if (filterKey === "subject") {
+        axios
+          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
+          .then((response) => {
+            console.log(response.data);
+            for (
+              var i = (this.pageNumber - 1) * 10;
+              i < this.pageNumber * 10;
+              i++
+            ) {
+              console.log(i);
+              this.$set(this.sender, i, response.data[i].userId);
+              this.$set(this.subject, i, response.data[i].title);
+              this.$set(this.priority, i, response.data[i].title);
+              this.$set(this.date, i, response.data[i].userId);
+              this.$set(this.type, i, response.data[i].userId);
+            }
+            console.log(
+              "from  : " +
+                (this.pageNumber - 1) * 10 +
+                "  to : " +
+                this.pageNumber * 10
+            );
+            console.log("pageNumber is " + this.pageNumber);
+          });
+
+        /*axios
+          .post("http://localhost:8081/filter", "subject")
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+          */
+
+        console.log("subject");
+      } else {
+        axios
+          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
+          .then((response) => {
+            console.log(response.data);
+            for (
+              var i = (this.pageNumber - 1) * 10;
+              i < this.pageNumber * 10;
+              i++
+            ) {
+              this.$set(this.sender, i, response.data[i].userId);
+              this.$set(this.subject, i, response.data[i].title);
+              this.$set(this.priority, i, response.data[i].userId);
+              this.$set(this.date, i, response.data[i].userId);
+              this.$set(this.type, i, response.data[i].userId);
+            }
+            console.log(
+              "from  : " +
+                (this.pageNumber - 1) * 10 +
+                "  to : " +
+                this.pageNumber * 10
+            );
+            console.log("pageNumber is " + this.pageNumber);
+          });
+
+        /*
+        axios
+          .post("http://localhost:8081/filter", "sender")
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+          */
+
+        console.log("sender");
+      }
     },
-    Sort() {
+
+    /*
+    Sort: function () {
       this.$emit(this.sortKey);
     },
-    Search() {
+
+    Search: function () {
       this.$emit(this.searchKey);
     },
+    */
   },
+
+  /* computed: {
+    showSubject: function () {
+      return this.sender[0].userId;
+    },
+  },
+  */
 };
 </script>
 <style  scoped>
@@ -392,6 +495,10 @@ export default {
   border: solid;
   border-radius: 20px;
   height: 30px;
+}
+
+.menuElement:hover {
+  background: rgb(9, 194, 194);
 }
 
 .emailsOperationButton:hover .subMenu-1 {
