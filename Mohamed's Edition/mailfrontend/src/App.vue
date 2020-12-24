@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <MailBox
-      @Filter="chooseFilter"
+      @FilterEmit="chooseFilter"
       @Sort="chooseSort"
       @Search="chooseSearch"
       id="options"
@@ -12,6 +12,8 @@
 
 <script>
 import MailBox from "./components/MailBox.vue";
+import "./filter.js";
+import "./router.js";
 //const axios = require("axios").default;
 export default {
   name: "App",
@@ -20,7 +22,7 @@ export default {
       counter: 0,
       pageOption: "Inbox Mail ✉️",
       contacts: [null],
-      sender: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
+      sender: ["f", "f", "f", "f", "f", "f", "f", "f", "f", "f"],
       subject: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
       priortity: ["d", "d", "d", "d"],
       date: ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d"],
@@ -34,9 +36,14 @@ export default {
     MailBox,
   },
   methods: {
-    chooseFilter: function (p) {
-      //the periority is p
-      this.priority = p;
+    chooseFilter: function (sender, subject, priortity, date, type) {
+      this.sender = sender;
+      this.subject = subject;
+      this.priortity = priortity;
+      this.date = date;
+      this.type = type;
+      console.log(this.sender);
+      console.log("we are here");
     },
     chooseSort: function (s) {
       //the periority is p

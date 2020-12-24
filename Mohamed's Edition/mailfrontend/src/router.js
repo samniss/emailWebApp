@@ -1,7 +1,7 @@
-/*import Vue from "vue";
+/*import Vue from 'vue'
 import MailBox from "./components/MailBox";
 
-Vue.use(Router);
+//Vue.use(Router);
 
 const routes = [
     {
