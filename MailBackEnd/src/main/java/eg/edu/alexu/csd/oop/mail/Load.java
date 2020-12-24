@@ -50,13 +50,14 @@ public class Load {
         }
     return emails;
     }
-    private List<String> loadEmailNames(String userEmailAddress,String folderName){
+
+    public List<String> loadEmailNames(String userEmailAddress,String folderName){
         List<String> emailNames=new ArrayList<String>();
         String path="System\\"+userEmailAddress+"\\"+folderName;
         String emailNamesPath=path+"\\"+"emailNames.json";//emailNames.json contains the names of the emails json files in the folder
         ObjectMapper mapper=new ObjectMapper();
         try {
-            emailNames =mapper.readValue(Paths.get(path).toFile(),ArrayList.class);
+            emailNames =mapper.readValue(Paths.get(emailNamesPath).toFile(),ArrayList.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

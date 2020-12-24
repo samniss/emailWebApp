@@ -1,5 +1,7 @@
 package eg.edu.alexu.csd.oop.mail;
 
+import java.util.ArrayList;
+
 public class Email {
 	private boolean Check = false;
 	private String Sender;
@@ -7,6 +9,15 @@ public class Email {
 	private String Subject; 
 	private String Date;
 	private String Content; //text
+	private ArrayList<String> attachments=new ArrayList<String>();
+
+	public ArrayList<String> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(ArrayList<String> attachments) {
+		this.attachments = attachments;
+	}
 
 	private boolean Draft;//A boolean which indicates if the email is saved as draft
 
@@ -69,4 +80,5 @@ public class Email {
 	public void setReceiver(LinkedBasedQ receiver) {
 		Receiver = receiver;
 	}
+
 }

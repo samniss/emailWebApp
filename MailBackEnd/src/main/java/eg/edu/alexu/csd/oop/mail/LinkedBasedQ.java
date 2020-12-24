@@ -70,9 +70,33 @@ public class LinkedBasedQ implements IQueue,ILinkedBased{
 
         return false;
     }
+    public Object peek(){
+        if(isEmpty())
+            throw new RuntimeException("Empty Queue");
+        return head.getElement();
+    }
 
     @Override
     public int size() {
         return size;
+    }
+    public LinkedBasedQ copy(LinkedBasedQ q){
+        LinkedBasedQ reversed=new LinkedBasedQ();
+        LinkedBasedQ temp=new LinkedBasedQ();
+        int size=q.size();
+        for(int i=0;i<size;i++){
+            reversed.enqueue(q.peek());
+            temp.enqueue(q.dequeue());
+        }
+        //reverse the copy queue
+        LinkedBasedQ copy=new LinkedBasedQ();
+        for(int i=0;i<size;i++){
+            copy.enqueue(reversed.dequeue());
+        }
+        //return the input q to its initial state
+        for(int i=0;i<size;i++){
+            q.enqueue(temp.dequeue());
+        }
+        return copy;
     }
 }

@@ -1,7 +1,9 @@
 package eg.edu.alexu.csd.oop.mail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -80,19 +82,25 @@ public class Save {
      *
      * @param email The draft email to be saved
      */
-    private void saveEmailAsDraft(Email email){
+    private void save(Email email,String userEmailAddress,String folderName){
         String saveName= email.getDate()+email.getSender();//The name of the json file on pc
-        String savePath="System\\"+email.getSender()+"\\"+"Draft"+"\\"+saveName+"\\"+saveName+".json"; //The path to which the email will be saved
+        String emailFolder="System\\"+userEmailAddress+"\\"+folderName+"\\"+saveName;
+        File f=new File(emailFolder);
+        f.mkdir();
+        String savePath=emailFolder+"\\"+saveName+".json"; //The path to which the email will be saved
         ObjectMapper om=new ObjectMapper();
         try {
             om.writeValue(Paths.get(savePath).toFile(),email);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("=====================");
-            System.out.println("Cannot Save The  Draft email");
+            System.out.println("Cannot Save email");
             System.out.println("=====================");
         }
-        saveEmailNames(email.getSender(),email.getSender(),email.getDate(),"Draft");
+        saveEmailNames(userEmailAddress,email.getSender(),email.getDate(),folderName);
+    }
+    private void saveEmailAsDraft(Email email){
+        save(email,email.getSender(),"Draft");
     }
 
     /**
@@ -109,18 +117,7 @@ public class Save {
      * @param email The email which will be saved in the Sent folder of the sender
      */
     private void saveForSender(Email email){
-        String saveName= email.getDate()+email.getSender();//The name of the json file on pc
-        String savePath="System\\"+email.getSender()+"\\"+"Sent"+"\\"+saveName+"\\"+saveName+".json"; //The path to which the email will be saved
-        ObjectMapper om=new ObjectMapper();
-        try {
-            om.writeValue(Paths.get(savePath).toFile(),email);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("=====================");
-            System.out.println("Cannot Save The  Draft email");
-            System.out.println("=====================");
-        }
-        saveEmailNames(email.getSender(),email.getSender(),email.getDate(),"Sent");
+        save(email,email.getSender(),"Sent");
     }
 
     /**
@@ -128,30 +125,50 @@ public class Save {
      * @param email The email which will be saved in the Inbox folder of the receivers
      */
     private void saveForReceivers(Email email){
-        String saveName= email.getDate()+email.getSender();//The name of the json file on pc
         String receiverEmailAddress;
-        LinkedBasedQ receivers=email.getReceiver();//The queue of the receivers of the email
-        for(int i=0;i< receivers.size();i++) {
-            receiverEmailAddress=(String)receivers.dequeue();
-            String savePath = "System\\" + receiverEmailAddress + "\\" + "Inbox" + "\\" + saveName + "\\" + saveName + ".json"; //The path to which the email will be saved
-            ObjectMapper om = new ObjectMapper();
-            try {
-                om.writeValue(Paths.get(savePath).toFile(), email);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("=====================");
-                System.out.println("Cannot Save The  Draft email");
-                System.out.println("=====================");
-            }
-            saveEmailNames(receiverEmailAddress,email.getSender(),email.getDate(),"Inbox");
-            receivers.enqueue(receiverEmailAddress);
+        LinkedBasedQ receivers=new LinkedBasedQ();
+        receivers=receivers.copy(email.getReceiver());
+        int size= receivers.size();
 
-        }
-        for(int j=0;j<receivers.size();j++){//Return the order of the queue
-            Object x=receivers.dequeue();
-            receivers.enqueue(x);
+        for(int i=0;i< size;i++) {
+            receiverEmailAddress=(String)receivers.dequeue();
+            save(email,receiverEmailAddress,"Inbox");
         }
     }
+    private void saveAttachment(MultipartFile file,String userEmailAddress,String folderName,String emailName){
+        String currentDirectory=System.getProperty("user.dir");
+        String filePath=currentDirectory+"\\"+"System\\"+userEmailAddress+"\\"+folderName+"\\"+emailName+"\\"+file.getOriginalFilename();
+        File f=new File(filePath);
+        try {
+            f.createNewFile();
+            file.transferTo(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+
+    }
+    public void saveAttachments(MultipartFile [] files,String userEmailAddress,String folderName,String emailName){
+        for(int i=0;i<files.length;i++){
+            saveAttachment(files[i],userEmailAddress,folderName,emailName);
+        }
+    }
+    public void createNewUser(String userEmailAddress){
+        String path="System\\"+userEmailAddress;
+        String [] folderNames={"Inbox","Draft","Trash","Sent"};
+        File f=new File(path);
+        f.mkdir();
+        ObjectMapper mapper=new ObjectMapper();
+        for(int i=0;i<4;i++){
+            String folder=path+"\\"+folderNames[i];
+            File newFolder=new File(folder);
+            newFolder.mkdir();
+            try {
+                mapper.writeValue(Paths.get(folder+"\\"+"emailNames.json").toFile(),new ArrayList<>());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
