@@ -1,18 +1,33 @@
 /*import Vue from 'vue'
+import App from './App.vue'
 import MailBox from "./components/MailBox";
-
-//Vue.use(Router);
-
+import LogIn from "./components/Login";
+import SignUp from "./components/signUp";
+import VueRouter from 'vue-router'
+Vue.use(VueRouter);
 const routes = [
     {
-        path: "/",
-        name: "mailbox",
+        path: "/mailbox",
         component: MailBox
+    },
+    {
+        path: "/signIn",
+        component: LogIn
+    },
+    {
+        path: "/signUp",
+        component: SignUp
+    },
+    {
+        path: "/",
+        component: LogIn
     }
-]
-export default new Router({
-    mode: "history",
-    base: process.env.BASE_URL,
-    routes
+];
+const router = new VueRouter({
+    routes: routes
 });
+new Vue({
+    router: router,
+    render: h => h(App),
+}).$mount('#app')
 */
