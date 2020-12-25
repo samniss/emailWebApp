@@ -31,7 +31,7 @@
             id="password"
             name="password"
             type="text"
-            placeholder="Password"
+            placeholder="🔒 Password"
           />
         </div>
         <div class="wrongInput" id="noPassword" style="display: none">
@@ -51,17 +51,17 @@
             <span>you should enter day</span>
           </div>
         </div>
-        <ul class="emailsOperationDiv">
-          <li class="emailsOperationButton">
+        <div class="emailsOperationDiv">
+          <div class="emailsOperationButton">
             Gender
             <div class="subMenu-1">
-              <ul>
-                <button class="menuElement">Male</button>
-                <button class="menuElement">Female</button>
+              <ul id="subMenuDiv">
+                <button class="menuElement">Male 🧑🏻</button>
+                <button class="menuElement">Female 👩🏻</button>
               </ul>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
         <div class="wrongInput" id="nogender" style="display: none">
           <span>you should select your gender</span>
         </div>
@@ -271,6 +271,7 @@ body {
   padding: 0 5px;
   font-size: 14px;
 }
+
 .display {
   width: 100%;
   line-height: 40px;
@@ -293,15 +294,12 @@ body {
   -webkit-appearance: none;
 }
 .createaccount {
-  padding: 15px;
   background: #47cc42;
   border: none;
   color: rgb(255, 255, 255);
   font-size: 16px;
-  font-weight: 400;
   height: 48px;
   line-height: 48px;
-  padding: 0 32px;
   text-align: center;
   font-size: 20px;
   border-radius: 15px;
@@ -310,8 +308,16 @@ body {
   text-align: center;
   background: rgb(233, 63, 51);
 }
+.login-choice {
+  margin-top: 110px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(rgb(58, 186, 224), rgb(59, 135, 223));
+}
+
 .login-choice span {
   color: #5b6987;
+  margin-bottom: 10px;
   display: -ms-grid;
   display: grid;
   font-size: 16px;
@@ -324,6 +330,8 @@ body {
   -ms-grid-columns: minmax(20px, 1fr) auto minmax(20px, 1fr);
   grid-template-columns: minmax(20px, 1fr) auto minmax(20px, 1fr);
   grid-gap: 19px;
+  border-radius: 20px;
+  background: linear-gradient(rgb(58, 186, 224), rgb(59, 135, 223));
 }
 .login-choice span:after,
 .login-choice span:before {
@@ -387,8 +395,8 @@ body {
   color: #fff;
 }
 .emailsOperationDiv {
-  display: inline-flex;
   float: left;
+  margin-left: 0px;
   margin-top: 10px;
   margin-bottom: 11%;
   width: 10%px;
@@ -399,7 +407,7 @@ body {
   height: 10%px;
 }
 .emailsOperationButton {
-  margin-right: 150px;
+  margin-right: 0px;
   line-height: 30px;
   float: left;
   width: 120px;
@@ -417,6 +425,8 @@ body {
 
 .subMenu-1 {
   display: none;
+  margin-top: -12px;
+  margin-bottom: 2px;
   border-bottom: solid;
   border-color: brown;
   border-radius: 20px;
@@ -425,10 +435,6 @@ body {
 
 .emailsOperationButton:hover .subMenu-1 {
   display: block;
-  border-bottom: solid;
-  border-color: brown;
-  border-radius: 20px;
-  background: rgb(235, 74, 74);
 }
 
 .AlreadyHaveAnAccountDiv {
@@ -442,5 +448,22 @@ body {
   margin-left: 2px;
   color: #ffffff;
   background: rgb(233, 63, 51);
+}
+
+.menuElement {
+  margin-top: 0px;
+  float: left;
+  width: 100px;
+  background: cyan;
+  border-radius: 20px;
+  border: solid;
+}
+.emailsOperationButton :hover {
+  background: rgb(44, 149, 156);
+}
+
+#subMenuDiv {
+  color: #15cd72;
+  background: #15cd72;
 }
 </style>

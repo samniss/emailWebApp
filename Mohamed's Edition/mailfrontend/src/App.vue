@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <!--<MailBox
+    <!--  <MailBox
       @FilterEmit="chooseFilter"
       @Sort="chooseSort"
       @Search="chooseSearch"
       id="options"
     />
--->
-    <!--<Login />-->
+    -->
+    <!-- <Login /> -->
     <signUp />
   </div>
 </template>
