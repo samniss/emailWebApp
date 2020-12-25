@@ -12,10 +12,14 @@
           />
         </div>
         <div class="wrongInput" id="noEmailAddress" style="display: none">
-          <span>you should enter Email Address</span>
+          <span class="somethingWrongSentence"
+            >❗️ You should enter an Email Address</span
+          >
         </div>
         <div class="wrongInput" id="notValidEmailAddress" style="display: none">
-          <span>NOT valid Email Address</span>
+          <span class="somethingWrongSentence"
+            >❗️ NOT a valid Email Address</span
+          >
         </div>
         <div class="form-fields">
           <input
@@ -26,7 +30,9 @@
           />
         </div>
         <div class="wrongInput" id="noPassword" style="display: none">
-          <span>you should enter password</span>
+          <span class="somethingWrongSentence"
+            >❗️ You should enter a password</span
+          >
         </div>
         <div class="form-fields">
           <button class="signIn" type="button" v-on:click="signIn()">
@@ -34,12 +40,14 @@
           </button>
         </div>
         <div class="wrongInput" id="wrongInput" style="display: none">
-          <span>wrong email address or password</span>
+          <span class="somethingWrongSentence"
+            >❗️ Wrong email address or password</span
+          >
         </div>
         <div>
           <p class="center">
             Don't have an account?
-            <a href="/signup"> Create one now</a>.
+            <a id="createOne" href="/signup"> Create one</a>.
           </p>
         </div>
       </div>
@@ -139,7 +147,6 @@ export default {
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
-  background: #0069ff;
 }
 /* Style the tab */
 .tab {
@@ -184,26 +191,30 @@ body {
   word-break: break-all;
 }
 .main-container {
-  margin-top: 10%;
+  margin-top: 6%;
 }
 .box-container {
   padding: 20px;
+  border-radius: 20px;
+  border: solid;
   margin: 0 auto;
   width: 400px;
   box-shadow: beige;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #fff;
+  background: rgb(245, 54, 235);
 }
 .heading {
   text-align: center;
   font-weight: 300;
   color: #444;
+  background: rgb(33, 226, 136);
   margin: 0 auto 45px;
   font-size: 35px;
   line-height: 38px;
   text-transform: none;
   letter-spacing: 0;
+  border: solid #15cd72;
+  border-radius: 15px;
 }
 .form-fields,
 .form-fields button {
@@ -225,12 +236,15 @@ body {
 .signIn {
   padding: 10px 32px;
   color: white;
-  font-size: 16px;
+  font-size: 25px;
   font-weight: 400;
-  background: #15cd72;
+  background: #e62626;
   text-align: center;
   cursor: pointer;
   height: auto;
+  border: solid;
+  border-radius: 20px;
+  border: brown;
   -webkit-appearance: none;
 }
 .createaccount {
@@ -247,7 +261,14 @@ body {
   border-radius: 5px;
 }
 .center {
+  height: 30px;
+  line-height: 30px;
+  border: solid;
+  border-radius: 10px;
   text-align: center;
+  background: #ff5e00;
+  font: 20px;
+  color: black;
 }
 .login-choice span {
   color: #5b6987;
@@ -270,16 +291,13 @@ body {
   border-top: 1px solid #e5e8ed;
 }
 .wrongInput {
-  color: #ff4343;
+  color: #ffffff;
   display: -ms-grid;
-  display: grid;
+  background: rgb(245, 54, 235);
+
   font-size: 16px;
   width: 100%;
   line-height: 40px;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  text-align: center;
   -ms-grid-columns: minmax(20px, 1fr) auto minmax(20px, 1fr);
   grid-template-columns: minmax(20px, 1fr) auto minmax(20px, 1fr);
   grid-gap: 19px;
@@ -324,5 +342,15 @@ body {
 .footer a {
   text-align: center;
   color: #fff;
+}
+
+.somethingWrongSentence {
+  background: rgb(245, 54, 235);
+}
+
+#createOne {
+  margin-left: 2px;
+  background: #ff5e00;
+  color: #ffffffda;
 }
 </style>
