@@ -45,8 +45,8 @@ public class MainClass {
         return main.signUp((String)map.get("username"),(String)map.get("address"),(String)map.get("password"),(String)map.get("birthDate"),(String)map.get("gender"));
     }
     @PostMapping("/saveEmail")
-    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments) {
-        main.save(mailJson,attachments);
+    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments,@RequestParam("receivers") ArrayList<String> receivers) {
+        main.save(mailJson,attachments,receivers);
     }
 
     @RequestMapping({"/loadEmails"})

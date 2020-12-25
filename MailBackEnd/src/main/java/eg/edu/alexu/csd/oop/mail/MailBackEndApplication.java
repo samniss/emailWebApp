@@ -3,6 +3,7 @@ package eg.edu.alexu.csd.oop.mail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.coyote.Adapter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.FileCopyUtils;
@@ -68,7 +69,7 @@ public static synchronized MailBackEndApplication getInstance(){
 		return instance;
 }
 
-	public void save( String mailJson, MultipartFile[] attachments) {
+	public void save( String mailJson, MultipartFile[] attachments,ArrayList<String> receivers) {
 		Email email = new Email();
 		ObjectMapper mapper=new ObjectMapper();
 		try {
@@ -76,6 +77,8 @@ public static synchronized MailBackEndApplication getInstance(){
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		ArrayListToQ ad=new ArrayListToQAdapter(new ArrayListToQAdaptee());
+		email.setReceiver(ad.changeToQ(receivers));
 		s.saveEmail(email, attachments);
 	}
 
