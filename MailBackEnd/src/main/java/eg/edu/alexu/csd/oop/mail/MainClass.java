@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @SpringBootApplication
@@ -19,8 +24,11 @@ public class MainClass {
    static MailBackEndApplication main=MailBackEndApplication.getInstance();
 
     public static void main(String args[]) {
-
-       SpringApplication.run(MainClass.class,args);
+        long timeInMillis = 1567109422*1000L;
+        Instant instant = Instant.ofEpochMilli(timeInMillis);
+        LocalDateTime date = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        System.out.println(date.format(dtf));
     }
     @GetMapping("/checkValidAddress")
     public boolean checkValidAddress(@RequestParam(value = "email",defaultValue = "") String mail){
@@ -46,6 +54,7 @@ public class MainClass {
     }
     @PostMapping("/saveEmail")
     public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments,@RequestParam("receivers") ArrayList<String> receivers) {
+
         main.save(mailJson,attachments,receivers);
     }
 

@@ -19,6 +19,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.net.URLConnection;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 //Singleton and Facade design pattern
@@ -79,6 +80,8 @@ public static synchronized MailBackEndApplication getInstance(){
 		}
 		ArrayListToQ ad=new ArrayListToQAdapter(new ArrayListToQAdaptee());
 		email.setReceiver(ad.changeToQ(receivers));
+		email.setDate(email.millisToDate(email.getDate()));
+		email.setSender(userEmailAddress);
 		s.saveEmail(email, attachments);
 	}
 

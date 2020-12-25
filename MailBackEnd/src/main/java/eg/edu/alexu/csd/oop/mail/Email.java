@@ -2,6 +2,10 @@ package eg.edu.alexu.csd.oop.mail;
 
 
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 public class Email {
 	private boolean Check = false;
@@ -108,5 +112,12 @@ public class Email {
 		}
 
 
+	}
+	//citation from https://www.logicbig.com/how-to/java-8-date-time-api/millis-to-date.html
+	public String millisToDate(String millis){
+		Instant instant = Instant.ofEpochMilli(Long.parseLong(millis));
+		LocalDateTime date = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+		DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return date.format(dtf);
 	}
 }
