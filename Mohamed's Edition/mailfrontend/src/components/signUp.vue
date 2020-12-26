@@ -72,7 +72,6 @@
         <div class="wrongInput" id="nogender" style="display: none">
           <span>you should select your gender</span>
         </div>
-        <div class="login-choice"><span>....</span></div>
         <button class="createaccount" type="button" v-on:click="signUp()">
           Submit
         </button>
@@ -101,7 +100,7 @@ export default {
         address: "",
         password: "",
         birthDate: "",
-        gender: "male",
+        gender: "",
         contacts: [],
         folders: [],
       },
@@ -139,6 +138,7 @@ export default {
       document.getElementById("noMonth").style = "display: none;";
       document.getElementById("noDay").style = "display: none;";
       document.getElementById("nogender").style = "display: none;";
+      console.log(Number.isInteger(parseFloat(document.getElementById("year").value)));
       var wrong = 0;
       if (this.mail.username == "") {
         document.getElementById("noFullName").style.display = "block";
@@ -156,13 +156,43 @@ export default {
         document.getElementById("noYear").style.display = "block";
         wrong = 1;
       }
+      if (!Number.isInteger(parseFloat(document.getElementById("year").value))) {
+        document.getElementById("noYear").style.display = "block";
+        wrong = 1;
+      }
+      else{
+        if(parseFloat(document.getElementById("year").value)<=0){
+          document.getElementById("noYear").style.display = "block";
+        wrong = 1;
+        }
+      }
       if (document.getElementById("month").value == "") {
         document.getElementById("noMonth").style.display = "block";
         wrong = 1;
       }
+      if (!Number.isInteger(parseFloat(document.getElementById("month").value))) {
+        document.getElementById("noMonth").style.display = "block";
+        wrong = 1;
+      }
+      else{
+        if(parseFloat(document.getElementById("month").value)<=0||parseFloat(document.getElementById("month").value)>12){
+          document.getElementById("noMonth").style.display = "block";
+        wrong = 1;
+        }
+      }
       if (document.getElementById("day").value == "") {
         document.getElementById("noDay").style.display = "block";
         wrong = 1;
+      }
+      if (!Number.isInteger(parseFloat(document.getElementById("day").value))) {
+        document.getElementById("noDay").style.display = "block";
+        wrong = 1;
+      }
+      else{
+        if(parseFloat(document.getElementById("day").value)<=0||parseFloat(document.getElementById("day").value)>30){
+          document.getElementById("noDay").style.display = "block";
+        wrong = 1;
+        }
       }
       if (this.mail.gender == "") {
         document.getElementById("nogender").style.display = "block";
