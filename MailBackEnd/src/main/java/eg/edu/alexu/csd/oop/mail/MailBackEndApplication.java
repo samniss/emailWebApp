@@ -21,6 +21,7 @@ import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 //Singleton and Facade design pattern
 public class MailBackEndApplication {
@@ -257,5 +258,21 @@ public static synchronized MailBackEndApplication getInstance(){
 	}
 	public ArrayList<Email> filterBoth(String filterNameSender,String filterNameSubject){
 		return af.meetCriteria(emailsInsidMe,filterNameSender,filterNameSubject);
+	}
+	public List<Contact> loadContacts(int page){
+		int start=(page-1)*10;
+		int end=(page*10)-1;
+		ArrayList<Contact> contacts=(ArrayList<Contact>)l.loadContacts(userEmailAddress);
+		if(start>contacts.size()-1){
+			return null;//Page is empty
+		}
+		else if (start<=contacts.size()-1 &&end>contacts.size()-1){
+			end=contacts.size()-1;
+		}
+		List<Contact> part=new ArrayList<Contact>();
+		for(int i=start;i<=end;i++){
+			part.add(contacts.get(i));
+		}
+		return part;
 	}
 }

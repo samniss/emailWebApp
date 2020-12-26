@@ -67,6 +67,8 @@ public class Load {
         String path="System\\"+userEmailAddress+"\\contacts.json";
         ObjectMapper mapper=new ObjectMapper();
         List<Contact> contacts=new ArrayList<Contact>();
+
+
         try {
              contacts=(ArrayList<Contact>)mapper.readValue(Paths.get(path).toFile(),ArrayList.class);
         } catch (IOException e) {
@@ -75,6 +77,9 @@ public class Load {
         for(int i=0;i<contacts.size();i++){
             contacts.set(i,mapper.convertValue(contacts.get(i),Contact.class));
         }
+
+
+
         return contacts;
     }
 }

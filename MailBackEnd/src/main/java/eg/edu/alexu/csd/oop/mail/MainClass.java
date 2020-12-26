@@ -108,5 +108,10 @@ public class MainClass {
     public ArrayList<Email> filterEmails(String filterNameSender,String filterNameSubject){
         return main.filterBoth(filterNameSender, filterNameSubject);
     }
+    @GetMapping("/loadContacts")
+    public List<Contact> loadContacts(int page){
+        return main.loadContacts(page);
+    }
+
     }
 
