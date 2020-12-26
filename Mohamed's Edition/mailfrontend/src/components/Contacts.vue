@@ -10,7 +10,9 @@
           >
             New Contact ➕
           </button>
-          <button class="ContactOperationButton">Delete Contact ➖</button>
+          <button class="ContactOperationButton" @click="Delete()">
+            Delete Contact ➖
+          </button>
           <div id="pageNumberOptionsDiv">
             <h2>1 2 3 4</h2>
             <input
@@ -52,7 +54,12 @@
           </tr>
           <tr class="row">
             <td class="rOption">
-              <input type="checkbox" value="0" @click="checkMark[0] = 1" />
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 0"
+              />
             </td>
             <td class="rOption">
               {{ name[0] }}
@@ -60,48 +67,111 @@
             <td class="rOption">{{ addresses[0] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 1"
+              />
+            </td>
             <td class="rOption">{{ name[1] }}</td>
             <td class="rOption">{{ addresses[1] }}</td>
           </tr>
           <tr class="row">
-            <td><input type="checkbox" value="0" /></td>
+            <td>
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 2"
+              />
+            </td>
             <td class="rOption">{{ name[2] }}</td>
             <td class="rOption">{{ addresses[2] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 3"
+              />
+            </td>
             <td class="rOption">{{ name[3] }}</td>
             <td class="rOption">{{ addresses[3] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 4"
+              />
+            </td>
             <td class="rOption">{{ name[4] }}</td>
             <td class="rOption">{{ addresses[4] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 5"
+              />
+            </td>
             <td class="rOption">{{ name[5] }}</td>
             <td class="rOption">{{ addresses[5] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 6"
+              />
+            </td>
 
             <td class="rOption">{{ name[6] }}</td>
             <td class="rOption">{{ addresses[6] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 7"
+              />
+            </td>
             <td class="rOption">{{ name[7] }}</td>
             <td class="rOption">{{ addresses[7] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 8"
+              />
+            </td>
             <td class="rOption">{{ name[8] }}</td>
             <td class="rOption">{{ addresses[8] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input
+                type="radio"
+                name="FolderOption"
+                value="false"
+                @click="namePointer = 9"
+              />
+            </td>
             <td class="rOption">{{ name[9] }}</td>
             <td class="rOption">{{ addresses[9] }}</td>
           </tr>
@@ -122,40 +192,58 @@ export default {
       pageOption: "Inbox Mail ✉️",
       name: [].fill(null),
       addresses: [].fill(null),
-
       checkMark: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       pageNumber: 1,
+      namePointer: 0,
     };
   },
 
   methods: {
     Show: function () {
+      this.name.fill(null);
+      this.addresses.fill(null);
       axios
-        .get("http://localhost:8080/loadContacts") //just to test the axios functionality
+        .get("http://localhost:8080/loadContacts", {
+          params: { pageNum: this.pageNumber },
+        }) //just to test the axios functionality
         .then((response) => {
           console.log(response.data);
-          for (var i = 0; i < response.data.length; i++) {
-            this.$set(this.name, i, response.data[i].name);
-            this.$set(this.addresses, i, response.data[i].emailAddresses);
+          console.log(typeof(response.data)=="string");
+          if (typeof (response.data) !="string") {
+            for (var i = 0; i < response.data.length; i++) {
+              this.$set(this.name, i, response.data[i].name);
+              this.$set(this.addresses, i, response.data[i].emailAddresses);
+            }
+            console.log("pageNumber is " + this.pageNumber);
           }
-          console.log(
-            "from  : " +
-              (this.pageNumber - 1) * 10 +
-              "  to : " +
-              this.pageNumber * 10
-          );
-          console.log("pageNumber is " + this.pageNumber);
+          else{
+            this.name.fill(null);
+            this.addresses.fill(null);
+          }
         });
-      console.log("subject");
     },
-  },
 
-  /* computed: {
-    showSubject: function () {
-      return this.sender[0].userId;
+    Delete: function () {
+      console.log(this.namePointer);
+      if (this.namePointer <= 0) {
+        var v = new FormData();
+        console.log(this.namePointer);
+        console.log(this.name[this.namePointer]);
+        v.append("contactName", this.name[this.namePointer]);
+        axios
+          .delete("http://localhost:8080/deleteContact",{data:v}) //just to test the axios functionality
+          .then((response) => {
+            console.log(response.data);
+            console.log("pageNumber is " + this.pageNumber);
+            this.Show();
+          });
+          this.namePointer=0;
+          console.log(this.namePointer);
+          this.Show();
+          
+      }
     },
   },
-  */
 };
 </script>
 <style  scoped>

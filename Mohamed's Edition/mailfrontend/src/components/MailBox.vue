@@ -103,10 +103,18 @@
               Sort
               <div class="subMenu-1">
                 <ul>
-                  <button class="menuElement">Priority</button>
-                  <button class="menuElement">Date</button>
-                  <button class="menuElement">Sender</button>
-                  <button class="menuElement">Subject</button>
+                  <button class="menuElement" @click="sortText = 'Priority'">
+                    Priority
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Date'">
+                    Date
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Sender'">
+                    Sender
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Subject'">
+                    Subject
+                  </button>
                 </ul>
               </div>
             </li>
@@ -116,6 +124,7 @@
             >
               Search<input type="text" id="searchText" value="" />
             </button>
+            <button class="menuElement" @click="open()"> open </button>
           </ul>
           <div id="pageNumberOptionsDiv">
             <h2>1 2 3 4</h2>
@@ -127,6 +136,7 @@
               checked="false"
               @click="(pageNumber = 1), ChangePage()"
             />
+
             <input
               type="radio"
               id="pageNumberTwoOption"
@@ -161,7 +171,12 @@
           </tr>
           <tr class="row">
             <td class="rOption">
-              <input type="checkbox" value="0" @click="checkMark[0] = 1" />
+              <input
+                type="radio"
+                name="EmailsOption"
+                value="false"
+                @click="namePointer = 1"
+              />
             </td>
             <td class="rOption">
               {{ sender[0] }}
@@ -171,42 +186,52 @@
             <td class="rOption">{{ date[0] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 2" />
+            </td>
             <td class="rOption">{{ sender[1] }}</td>
             <td class="rOption">{{ subject[1] }}</td>
             <td class="rOption">{{ priority[1] }}</td>
             <td class="rOption">{{ date[1] }}</td>
           </tr>
           <tr class="row">
-            <td><input type="checkbox" value="0" /></td>
+            <td><input type="radio" name="EmailsOption" value="false" @click="namePointer = 2" /></td>
             <td class="rOption">{{ sender[2] }}</td>
             <td class="rOption">{{ subject[2] }}</td>
             <td class="rOption">{{ priority[2] }}</td>
             <td class="rOption">{{ date[2] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 4"/>
+            </td>
             <td class="rOption">{{ sender[3] }}</td>
             <td class="rOption">{{ subject[3] }}</td>
             <td class="rOption">{{ priority[3] }}</td>
             <td class="rOption">{{ date[3] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="this.namePointer = 5"/>
+            </td>
             <td class="rOption">{{ sender[4] }}</td>
             <td class="rOption">{{ subject[4] }}</td>
             <td class="rOption">{{ priority[4] }}</td>
             <td class="rOption">{{ date[4] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 6"/>
+            </td>
             <td class="rOption">{{ sender[5] }}</td>
             <td class="rOption">{{ subject[5] }}</td>
             <td class="rOption">{{ priority[5] }}</td>
             <td class="rOption">{{ date[5] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 7"/>
+            </td>
 
             <td class="rOption">{{ sender[6] }}</td>
             <td class="rOption">{{ subject[6] }}</td>
@@ -214,21 +239,27 @@
             <td class="rOption">{{ date[6] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 8"/>
+            </td>
             <td class="rOption">{{ sender[7] }}</td>
             <td class="rOption">{{ subject[7] }}</td>
             <td class="rOption">{{ priority[7] }}</td>
             <td class="rOption">{{ date[7] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer =9"/>
+            </td>
             <td class="rOption">{{ sender[8] }}</td>
             <td class="rOption">{{ subject[8] }}</td>
             <td class="rOption">{{ priority[8] }}</td>
             <td class="rOption">{{ date[8] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="EmailsOption" value="false" @click="namePointer = 10"/>
+            </td>
             <td class="rOption">{{ sender[9] }}</td>
             <td class="rOption">{{ subject[9] }}</td>
             <td class="rOption">{{ priority[9] }}</td>
@@ -263,22 +294,12 @@ export default {
       searchText: "null",
       pageNumber: 1,
       folderName: "inbox",
+      namePointer:0
     };
   },
 
   methods: {
-    //loadong whenevrer the user login immediately
-    /*  SetButtonColorInbox: function () {
-      var prop = document.getElementById("inboxBtn");
-      prop.style.backgroundColor = "#b4b4b4";
-      document.getElementById("trashBtn").style.backgroundColor = "#fff";
-    },
-    SetButtonColorTrash: function () {
-      var prop = document.getElementById("trashBtn");
-      prop.style.backgroundColor = "#b4b4b4";
-      document.getElementById("inoxBtn").style.backgroundColor = "#fff";
-    },
-*/
+    //loading whenevrer the user login immediately
     displayCompose: function () {
       document.getElementById("sendOption").style.display = "block";
     },
@@ -367,6 +388,30 @@ export default {
           console.log("pageNumber is " + this.pageNumber);
         });
     },
+    open: function (){
+      //the name of the email need to be opened
+      //console.log(this.namePointer);
+      //this.sender[this.namePointer-1]
+      //tell the backend which file need to be opened
+      if (!(typeof this.date[this.namePointer-1] === 'undefined')&&!(typeof this.sender[this.namePointer-1] === 'undefined')) {
+        console.log(this.date[this.namePointer-1]);
+      console.log(this.sender[this.namePointer-1]);
+      var emailName=this.date[this.namePointer-1]+this.sender[this.namePointer-1];
+      console.log(emailName);
+      var v = new FormData();
+      v.append("currentEmail", emailName);
+      axios
+          .post("http://localhost:8080/setCurrentEmail", v)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      //go to show email interface in the frontend
+      window.location.href = "/email";
+      }
+    }
   },
 
   /* computed: {

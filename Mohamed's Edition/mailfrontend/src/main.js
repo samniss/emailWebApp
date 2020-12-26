@@ -8,6 +8,7 @@ import Contacts from "./components/Contacts";
 import NewContact from "./components/newContact";
 import Folders from "./components/Folders";
 import compose from "./components/compose";
+import email from "./components/viewMail"
 Vue.use(VueRouter);
 const routes = [
   {
@@ -42,6 +43,10 @@ const routes = [
   {
     path: "/SendEmail",
     component: compose
+  },
+  {
+    path: "/email",
+    component: email
   }
 ];
 export const router = new VueRouter({

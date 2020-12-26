@@ -61,16 +61,16 @@ export default {
   data: function () {
     return {
       contact: {
-        username: "",
-        address: "",
+        name: "",
+        emailAddresses: [],
       },
     };
   },
   methods: {
     newcontact: function () {
       // Selecting the input mail element and get its value
-      this.contact.address = document.getElementById("email").value;
-      this.contact.username = document.getElementById("contactName").value;
+      this.contact.emailAddresses.push(document.getElementById("email").value);
+      this.contact.name = document.getElementById("contactName").value;
       document.getElementById("noEmailAddress").style = "display: none;";
       document.getElementById("noContact").style = "display: none;";
       var wrong = 0;
@@ -85,7 +85,7 @@ export default {
       if (wrong == 0) {
         axios
           .get("http://localhost:8080/checkValidAddress", {
-            params: { email: this.mail.address },
+            params: { email: document.getElementById("email").value },
           })
           .then((response) => {
             console.log(response.data);
@@ -96,6 +96,7 @@ export default {
             } else {
               document.getElementById("notValidEmailAddress").style =
                 "display: none;";
+              console.log(this.contact);
               axios
                 .post("http://localhost:8080/addContact", this.contact)
                 .then((response) => {
@@ -105,6 +106,7 @@ export default {
                   } else {
                     //document.getElementById("wrongInput").style ="display: none;";
                     //go to the main interface of the website
+                    
                     window.location.href = "/Contacts";
                   }
                 })
