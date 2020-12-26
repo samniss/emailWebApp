@@ -275,4 +275,18 @@ public static synchronized MailBackEndApplication getInstance(){
 		}
 		return part;
 	}
+	public ArrayList<Email> searchEmailBack(String searchKey){
+		return Search.search(emailsInsidMe, searchKey);
+	}
+	public ArrayList<Email> sortEmailBack(String sortKey){
+		if(sortKey.equals("Priority")){
+			return Sort.getEmailsSortedByPriority(emailsInsidMe);
+		}else if(sortKey.equals("Subject")){
+			return Sort.getEmailsSortedBySubject(emailsInsidMe);
+		}else if(sortKey.equals("Sender")){
+			return Sort.getEmailsSortedBySender(emailsInsidMe);
+		}else {
+			return Sort.getEmailsSortedByDate(emailsInsidMe);
+		}
+	}
 }

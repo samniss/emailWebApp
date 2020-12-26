@@ -112,6 +112,14 @@ public class MainClass {
     public List<Contact> loadContacts(int page){
         return main.loadContacts(page);
     }
+    @GetMapping("/searcher")
+    public ArrayList<Email> searchEmails(@RequestParam("searchKey")String searchKey){
+        return main.searchEmailBack(searchKey);
+    }
+    @GetMapping("/sorter")
+    public ArrayList<Email> sortEmails(@RequestParam("sortKey")String sortKey){
+        return main.sortEmailBack(sortKey);
+    }
 
     }
 
