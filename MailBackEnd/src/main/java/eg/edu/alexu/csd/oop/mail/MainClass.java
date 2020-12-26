@@ -1,19 +1,16 @@
 package eg.edu.alexu.csd.oop.mail;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -63,6 +60,26 @@ public class MainClass {
         main.setFolderName(folderName);
         main.setMails(main.loadEmails(page));
         return main.getMails();
+    }
+
+    @RequestMapping({"/loadFolders"})
+    public ArrayList<File> loadFolders(@RequestParam("page") int page) {
+        return main.loadFolders(page);
+    }
+
+    @PostMapping({"/addFolders"})
+    public boolean addFolder(@RequestParam("folderName") String  folderName) {
+        return main.addFolder(folderName);
+    }
+
+    @DeleteMapping({"/deleteFolder"})
+    public boolean deleteFolder(@RequestParam("folderName") String  folderName) {
+        return main.deleteFolder(folderName);
+    }
+
+    @PutMapping({"/updateFolderName"})
+    public boolean updateFolderName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
+        return main.updateFolderName(oldName,newName);
     }
 
     @GetMapping("/downloadAttachment")
