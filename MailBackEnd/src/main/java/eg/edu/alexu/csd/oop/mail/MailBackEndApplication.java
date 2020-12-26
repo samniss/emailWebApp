@@ -3,23 +3,14 @@ package eg.edu.alexu.csd.oop.mail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.coyote.Adapter;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.URLConnection;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +81,45 @@ public static synchronized MailBackEndApplication getInstance(){
 		return (ArrayList<Email>) l.loadEmails(userEmailAddress, folderName, page);
 	}
 
+	public ArrayList<File> loadFolders(int page) {
+		return (ArrayList<File>) l.loadFolders(userEmailAddress, page);
+	}
+
+	//return success if the contact is a new contact and  it has been saved
+	public boolean addFolder(String folderName) {
+		if (!l.checkExistFolderInUserFolder(userEmailAddress,folderName)){
+			File newFolder = new File("System/" + userEmailAddress + "/"+folderName);
+			newFolder.mkdir();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	public boolean deleteFolder(String folderName){
+		if (l.checkExistFolderInUserFolder(userEmailAddress,folderName)){
+			File theFolder = new File("System/" + userEmailAddress + "/"+folderName);
+			theFolder.delete();
+			return true;
+		}
+		return false;
+	}
+	public boolean updateFolderName(String oldName,String newName){
+		if (l.checkExistFolderInUserFolder(userEmailAddress,oldName)){
+			File folder = new File("System/" + userEmailAddress + "/"+oldName);
+			File folder2 = new File("System/" + userEmailAddress + "/"+newName);
+			if (folder2.exists()) {
+				return false;
+			}
+			// Rename file (or directory)
+			boolean success = folder.renameTo(folder2);
+			return success;
+		}
+		else {
+			return false;
+		}
+	}
+
 	//Citation from https://www.javainuse.com/spring/boot-file-download with some changes
 	//Load an attachment
 	public void download(HttpServletRequest request, HttpServletResponse response, String fileName,String emailName)  {
@@ -152,79 +182,96 @@ public static synchronized MailBackEndApplication getInstance(){
 	///////////need to be written//////////////////////////////////
 	public boolean signIn(String email, String password) {
 		boolean check1=folder.checkExistUsername(email);
-		boolean check2=folder.checkPassword(email,password);
-		if(check1==true && check2==true)
-			return true;
+		if(check1==true) {
+			boolean check2 = folder.checkPassword(email, password);
+			if (check1 == true && check2 == true)
+				return true;
+			else {
+				return false;
+			}
+		}
 		else {
 			return false;
 		}
 	}
 	public boolean signUp(String name, String address, String password, String birthDate, String gender){
-		if(new Folder().checkExistUsername(address)) {
+		if (name!=null&&address!=null&&password!=null&&birthDate!=null&&gender!=null) {
+			if (name!=""&&address!=""&&password!=""&&birthDate!=""&&gender!="") {
+				if (new Folder().checkExistUsername(address)) {
 
-			return false;//that name is existing
-		}
-		else {
-			File user=new File("System/"+"/"+address);
-			File Contact=new File("System/"+address+"/Contact");
-			File Draft=new File("System/"+address+"/Draft");
-			File Inbox=new File("System/"+address+"/Inbox");
-			File Sent=new File("System/"+address+"/Sent");
-			File Trash=new File("System/"+address+"/Trash");
-			user.mkdir();
-			Contact.mkdir();
-			Draft.mkdir();
-			Inbox.mkdir();
-			Sent.mkdir();
-			Trash.mkdir();
-			User u=new User(name,address,password,gender,birthDate);
-			Save s=new Save();
-			s.saveUserData(u);
-			ObjectMapper om=new ObjectMapper();
-			try {
-				om.writeValue(Paths.get("System/"+address+"/Contact"+"\\emailNames.json").toFile(),new ArrayList<Contact>());
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			try {
-				om.writeValue(Paths.get("System/"+address+"/Draft"+"\\emailNames.json").toFile(),new ArrayList<String>());
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			try {
-				om.writeValue(Paths.get("System/"+address+"/Inbox"+"\\emailNames.json").toFile(),new ArrayList<String>());
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			try {
-				om.writeValue(Paths.get("System/"+address+"/Sent"+"\\emailNames.json").toFile(),new ArrayList<String>());
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			try {
-				om.writeValue(Paths.get("System/"+address+"/Trash"+"\\emailNames.json").toFile(),new ArrayList<String>());
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-			return true;
-		}
-	}
-	public boolean checkValidAddress(String address){
-		if (address.contains("@")){
-			String[] splited =address.split("@");
-			if (splited.length==2){
-				if (splited[1].contains(".com")){
+					return false;//that name is existing
+				} else {
+					File user = new File("System/" + "/" + address);
+					File Contact = new File("System/" + address + "/Contact");
+					File Draft = new File("System/" + address + "/Draft");
+					File Inbox = new File("System/" + address + "/Inbox");
+					File Sent = new File("System/" + address + "/Sent");
+					File Trash = new File("System/" + address + "/Trash");
+					user.mkdir();
+					Contact.mkdir();
+					Draft.mkdir();
+					Inbox.mkdir();
+					Sent.mkdir();
+					Trash.mkdir();
+					User u = new User(name, address, password, gender, birthDate);
+					Save s = new Save();
+					s.saveUserData(u);
+					ObjectMapper om = new ObjectMapper();
+					try {
+						om.writeValue(Paths.get("System/" + address + "/Contact" + "\\emailNames.json").toFile(), new ArrayList<Contact>());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					try {
+						om.writeValue(Paths.get("System/" + address + "/Draft" + "\\emailNames.json").toFile(), new ArrayList<String>());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					try {
+						om.writeValue(Paths.get("System/" + address + "/Inbox" + "\\emailNames.json").toFile(), new ArrayList<String>());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					try {
+						om.writeValue(Paths.get("System/" + address + "/Sent" + "\\emailNames.json").toFile(), new ArrayList<String>());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					try {
+						om.writeValue(Paths.get("System/" + address + "/Trash" + "\\emailNames.json").toFile(), new ArrayList<String>());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					return true;
-				}
-				else {
-					return false;
 				}
 			}
 			else {
 				return false;
 			}
 		}
-		return false;
+		else {
+			return false;
+		}
+	}
+	public boolean checkValidAddress(String address){
+		if (address!=null) {
+			if (address.contains("@")) {
+				String[] splited = address.split("@");
+				if (splited.length == 2) {
+					if (splited[1].equals("MAJ.com")) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			return false;
+		}
+		else {
+			return false;
+		}
 	}
 	//return success if the contact is a new contact and  it has been saved
 	public boolean addContact(Contact contact) {
