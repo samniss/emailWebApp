@@ -1,108 +1,149 @@
 package eg.edu.alexu.csd.oop.mail;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.lang.reflect.Array;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.File;
 import java.util.*;
+
 @SpringBootApplication
 @CrossOrigin
 @RestController
 public class MainClass {
-    Save s = new Save();
-    Load l = new Load();
-    Move m = new Move();
-    ObjectMapper mapper = new ObjectMapper();
+   static MailBackEndApplication main=MailBackEndApplication.getInstance();
 
     public static void main(String args[]) {
-        /*Move m=new Move();
-        m.move("4-12-2020Abdelrahman@MAJ.com","Abdelrahman@MAJ.com","Sent","Trash");*//*
-        Email mail=new Email();
-        mail.setSender("Mahmoud@MAJ.com");
-        DateTimeFormatter dtf= DateTimeFormatter.ofPattern(" yyyy-MM-dd HH:mm:ss");
-        LocalDateTime ldt=LocalDateTime.now();
-        mail.setDate(ldt.format(dtf));
-        LinkedBasedQ q=new LinkedBasedQ();
-        q.enqueue("Abdelrahman@MAJ.com");
-        q.enqueue("Ahmed@MAJ.com");
-        mail.setReceiver(q);
-        Save s=new Save();*/
         SpringApplication.run(MainClass.class,args);
     }
+    @GetMapping("/checkValidAddress")
+    public boolean checkValidAddress(@RequestParam(value = "email",defaultValue = "") String mail){
+        return main.checkValidAddress(mail);
+    }
+    @GetMapping("/signIn")
+    public boolean signIn(@RequestParam(value = "email",defaultValue = "") String mail, @RequestParam(value = "password",defaultValue = "") String passwoed){
+        main.setUserEmailAddress(mail);
+        return main.signIn(mail,passwoed);
+    }
+    @RequestMapping("/signUp")
+    public boolean signUp(@RequestBody String shapeJson) {
 
-    @PostMapping("/saveEmail")
-    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] files) {
-        Email email = new Email();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<?, ?> map = null;
         try {
-            email = mapper.readValue(mailJson, Email.class);
+            map = objectMapper.readValue(shapeJson,Map.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        s.saveEmail(email, files);
+        main.setUserEmailAddress((String)map.get("address"));
+        return main.signUp((String)map.get("username"),(String)map.get("address"),(String)map.get("password"),(String)map.get("birthDate"),(String)map.get("gender"));
+    }
+    @PostMapping("/saveEmail")
+    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments,@RequestParam("receivers") ArrayList<String> receivers) {
+
+        main.save(mailJson,attachments,receivers);
     }
 
     @RequestMapping({"/loadEmails"})
-    public ArrayList<Email> loadEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("folderName") String folderName, @RequestParam("page") int page) {
-        return (ArrayList<Email>) l.loadEmails(userEmailAddress, folderName, page);
+    public ArrayList<Email> loadEmails(@RequestParam("page") int page,@RequestParam("folderName") String folderName) {
+        main.setFolderName(folderName);
+        main.setMails(main.loadEmails(page));
+        return main.getMails();
     }
 
-    //Citation from https://www.javainuse.com/spring/boot-file-download with some changes
-    //Load an attachment
+    @RequestMapping({"/loadFolders"})
+    public ArrayList<File> loadFolders(@RequestParam("page") int page) {
+        return main.loadFolders(page);
+    }
+
+    @GetMapping({"/addFolders"})
+    public boolean addFolder(@RequestParam("folderName") String  folderName) {
+        return main.addFolder(folderName);
+    }
+
+    @DeleteMapping({"/deleteFolder"})
+    public boolean deleteFolder(@RequestParam("folderName") String  folderName) {
+        return main.deleteFolder(folderName);
+    }
+
+    @PutMapping({"/updateFolderName"})
+    public boolean updateFolderName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
+        return main.updateFolderName(oldName,newName);
+    }
+
     @GetMapping("/downloadAttachment")
-
-    public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName, @RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("folderName") String folderName, @RequestParam("emailName") String emailName) throws IOException {
-        String path = "System\\" + userEmailAddress + "\\" + folderName + "\\" + emailName + "\\" + fileName;
-        File file = new File(path);
-        if (file.exists()) {
-            //get the mimetype
-            String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-            if (mimeType == null) {
-                //unknown mimetype so set the mimetype to application/octet-stream
-                mimeType = "application/octet-stream";
-            }
-            response.setContentType(mimeType);
-
-            //(Content-Disposition->Attachment)  File is downloaded as an attachment
-            response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + file.getName() + "\""));
-            response.setContentLength((int) file.length());
-
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
-
-
-        }
-
+    public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName, @RequestParam("emailName") String emailName) {
+        main.download(request,response,fileName,emailName);
     }
 
 
     @PostMapping({"/moveEmails"})
-    public void moveEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("emailName") String emailName, @RequestParam("oldFolder") String oldFolder, @RequestParam("newFolder") String newFolder) {
-        m.move(emailName, userEmailAddress, oldFolder, newFolder);
+    public void moveEmails(@RequestParam("emailNames") ArrayList<String> emailNames, @RequestParam("newFolder") String newFolder) {
+        main.moveEmails(emailNames,newFolder);
     }
 
     @DeleteMapping({"/deleteEmails"})
-    public void deleteEmails(@RequestParam("userEmailAddress") String userEmailAddress, @RequestParam("emailName") String emailName, @RequestParam("oldFolder") String oldFolder) {
-        m.move(emailName, userEmailAddress, oldFolder, "Trash");
+    public void deleteEmails(@RequestParam("emailNames") ArrayList<String> emailNames) {
+        main.deleteEmails(emailNames);
+    }
+    @RequestMapping ({"/addContact"})
+    public boolean addContact(@RequestBody String contact){
+
+        ObjectMapper mapper=new ObjectMapper();
+        Contact cont=null;
+        try {
+             cont=mapper.readValue(contact,Contact.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return main.addContact(cont);
+    }
+    @DeleteMapping({"/deleteContact"})
+    public void deleteContact(@RequestParam("contactName") String contactName){
+        main.deleteContact(contactName);
+    }
+    @PutMapping({"/updateContactName"})
+    public boolean updateContactName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
+        if(!oldName.equals(newName)) {
+            return main.updateContactName(oldName, newName);
+        }
+        else {
+            return true;//Won't do anything because the old name and the new name are the same
+        }
     }
 
+    @PutMapping({"/updateContactEmail"})
+    public boolean updateContactEmail(@RequestParam("contactName") String contactName,@RequestParam("oldEmailAddress")String oldEmailAddress,@RequestParam("newEmailAddress") String newEmailAddress){
+       return  main.updateContactEmail(contactName,oldEmailAddress,newEmailAddress);
     }
+    @GetMapping({"/filterEmails"})
+    public ArrayList<Email> filterEmails(String filterNameSender,String filterNameSubject){
+        return main.filterBoth(filterNameSender, filterNameSubject);
+    }
+    @GetMapping("/loadContacts")
+    public List<Contact> loadContacts(@RequestParam ("pageNum") int page){
+        return main.loadContacts(page);
+    }
+    @GetMapping("/searcher")
+    public ArrayList<Email> searchEmails(@RequestParam("searchKey")String searchKey){
+        return main.searchEmailBack(searchKey);
+    }
+    @GetMapping("/sorter")
+    public ArrayList<Email> sortEmails(@RequestParam("sortKey")String sortKey){
+        return main.sortEmailBack(sortKey);
+    }
+
+    @PostMapping("/setCurrentEmail")
+    public void setCurrentEmail(@RequestParam("currentEmail")String currentEmail){
+        main.setCurrentEmailName(currentEmail);
+    }
+    @GetMapping("/getCurrentEmail")
+    public Email getCurrentEmail(){
+        return main.getCurrentEmailName();
+    }
+}
 

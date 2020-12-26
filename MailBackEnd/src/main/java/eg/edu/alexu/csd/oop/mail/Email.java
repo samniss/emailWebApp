@@ -1,7 +1,12 @@
 package eg.edu.alexu.csd.oop.mail;
 
-import java.util.ArrayList;
 
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 public class Email {
 	private boolean Check = false;
 	private String Sender;
@@ -9,8 +14,14 @@ public class Email {
 	private String Subject; 
 	private String Date;
 	private String Content; //text
+	private boolean Draft;//A boolean which indicates if the email is saved as draft
+	private int Priority; // using adapter design pattern
+
 	private ArrayList<String> attachments=new ArrayList<String>();
 
+	public Email(){
+
+	}
 	public ArrayList<String> getAttachments() {
 		return attachments;
 	}
@@ -19,9 +30,7 @@ public class Email {
 		this.attachments = attachments;
 	}
 
-	private boolean Draft;//A boolean which indicates if the email is saved as draft
 
-	private int Priority; // using adapter design pattern
 
 	public boolean isDraft() {
 		return Draft;
@@ -76,9 +85,39 @@ public class Email {
 	public LinkedBasedQ getReceiver() {
 		return Receiver;
 	}
-
 	public void setReceiver(LinkedBasedQ receiver) {
 		Receiver = receiver;
 	}
+	public void show(){
+		System.out.println("Sender : " + this.getSender());
+		if(this.getReceiver()!=null){
+			System.out.println("Receivers : ");
+			this.getReceiver().show();
+		}
+		else {
+			System.out.println("Receivers : " + "null");
+		}
+		System.out.println("Subject : " + this.getSubject());
+		System.out.println("Date : " + this.getDate());
+		System.out.println("Content : " + this.getContent());
+		System.out.println("Priority : " + this.getPriority());
+		System.out.println("Attachments : ");
+		if(this.getAttachments().size()!=0){
+			for(int i=0;i<attachments.size();i++){
+			System.out.println(attachments.get(i));
+			}
+		}
+		else {
+			System.out.println("null");
+		}
 
+
+	}
+	//citation from https://www.logicbig.com/how-to/java-8-date-time-api/millis-to-date.html
+	public String millisToDate(String millis){
+		Instant instant = Instant.ofEpochMilli(Long.parseLong(millis));
+		LocalDateTime date = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+		DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return date.format(dtf);
+	}
 }

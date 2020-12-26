@@ -15,7 +15,12 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Move {
-    public void move(String emailName, String userEmailAddress, String oldFolder, String newFolder) {//Moves the one email from one folder to another
+    public void moveEmails(ArrayList<String> emailNames,String userEmailAddress,String oldFolder,String newFolder){
+        for(int i=0;i< emailNames.size();i++){
+            moveEmail(emailNames.get(i),userEmailAddress,oldFolder,newFolder);
+        }
+    }
+    private void moveEmail(String emailName, String userEmailAddress, String oldFolder, String newFolder) {//Moves the one email from one folder to another
         String oldEmailFolder="System\\" + userEmailAddress + "\\" + oldFolder + "\\" + emailName;
         String newEmailFolder="System\\" + userEmailAddress + "\\" + newFolder + "\\" + emailName;
         String oldEmailPath = oldEmailFolder+ "\\" + emailName + ".json";
@@ -78,7 +83,7 @@ public class Move {
         //Create a new Arraylist with the dates of the emails only
 
         ArrayList<LocalDateTime> emailDates=new ArrayList<LocalDateTime>();
-        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         for(int i=0;i< emailNames.size();i++){
             emailDates.add(LocalDateTime.parse(emailNames.get(i).substring(0, emailNames.get(i).indexOf(userEmailAddress)),dtf));
         }

@@ -159,22 +159,21 @@ public class Save {
            }
        }
     }
-    public void createNewUser(String userEmailAddress){
-        String path="System\\"+userEmailAddress;
-        String [] folderNames={"Inbox","Draft","Trash","Sent"};
-        File f=new File(path);
-        f.mkdir();
-        ObjectMapper mapper=new ObjectMapper();
-        for(int i=0;i<4;i++){
-            String folder=path+"\\"+folderNames[i];
-            File newFolder=new File(folder);
-            newFolder.mkdir();
+    //function return false if one of the email addresses of the contact doesn't exist
+    public void saveContact(Contact contact,String userEmailAddress){
+
+            String path = "System\\" + userEmailAddress + "\\contacts.json";
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayList<Contact> contacts = new ArrayList<Contact>();
             try {
-                mapper.writeValue(Paths.get(folder+"\\"+"emailNames.json").toFile(),new ArrayList<>());
+                contacts = (ArrayList<Contact>) mapper.readValue(Paths.get(path).toFile(), ArrayList.class);
+                contacts.add(contact);
+                mapper.writeValue(Paths.get(path).toFile(), contacts);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
     }
+
 
 }
