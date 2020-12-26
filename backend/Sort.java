@@ -46,18 +46,23 @@ public class Sort {
         }
     };
 
-    public ArrayList<Email> getEmailsSortedBySubject(ArrayList<Email> givenEmails){
+    public static ArrayList<Email> getEmailsSortedBySubject(ArrayList<Email> givenEmails){
         Collections.sort(givenEmails, subjectComparator);
         return givenEmails;
     }
 
-    public ArrayList<Email> getEmailsSortedBySender(ArrayList<Email> givenEmails){
+    public static ArrayList<Email> getEmailsSortedBySender(ArrayList<Email> givenEmails){
         Collections.sort(givenEmails, senderComparator);
         return givenEmails;
     }
 
-    public ArrayList<Email> getEmailsSortedByPriority(ArrayList<Email> givenEmails){
+    public static ArrayList<Email> getEmailsSortedByPriority(ArrayList<Email> givenEmails){
         Collections.sort(givenEmails, priorityComparator);
+        return givenEmails;
+    }
+
+    public static ArrayList<Email> getEmailsSortedByDate(ArrayList<Email> givenEmails){
+        Collections.sort(givenEmails, dateComparator);
         return givenEmails;
     }
 
@@ -68,9 +73,9 @@ public class Sort {
 
     public static void main(String[] args) {
         ArrayList<Email> trial = new ArrayList<Email>();
-        trial.add(new Email("hey", "first try", "whatever", "i hope it works"));
-        trial.add(new Email("hello", "troiseme trial", "whatev", "i really do"));
-        trial.add(new Email("bonjour", "second try", "this is 2012", "i am dead"));
+        // trial.add(new Email("hey", "first try", "whatever", "i hope it works"));
+        // trial.add(new Email("hello", "troiseme trial", "whatev", "i really do"));
+        // trial.add(new Email("bonjour", "second try", "this is 2012", "i am dead"));
         Sort sortingClass = new Sort();
         sortingClass.getEmailsSortedBySubject(trial);
         ArrayList<Email> trial2 = Search.search(trial, "hey");
