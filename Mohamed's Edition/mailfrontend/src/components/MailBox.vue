@@ -1,24 +1,86 @@
 <template>
   <div class="MailBox">
+    <!-- <compose /> -->
     <div class="page">
       <div class="optionsColumn">
-        <button id="sendOption">Send Email ✏️</button>
+        <button id="sendOption" onclick="window.location.href='/SendEmail';">
+          Send Email ✏️
+        </button>
         <div pageOptionDiv>
-          <button @click="pageOption = 'Inbox Mail ✉️'" class="pageOption">
+          <button
+            id="inboxBtn"
+            @click="
+              //SetButtonColorInbox(),
+              (pageOption = 'Inbox Mail ✉️'),
+                ChangePage(),
+                (pageNumber = 1),
+                (document.getElementById('pageNumberOneOption').value = true),
+                (document.getElementById('pageNumberOneOption').checked = true),
+                console.log('pageNumber'),
+                (folderName = 'Inbox')
+            "
+            class="pageOption"
+          >
             Inbox 📫
           </button>
         </div>
         <div pageOptionDiv>
-          <button @click="pageOption = 'Trash Box🗑️'" class="pageOption">
+          <button
+            id="trashBtn"
+            @click="
+              // SetButtonColorTrash(),
+              (pageOption = 'Trash Box🗑️'),
+                (pageNumber = 1),
+                ChangePage(),
+                (document.getElementById('pageNumberOneOption').value = true),
+                (document.getElementById('pageNumberOneOption').checked = true),
+                console.log('pageNumber'),
+                (folderName = 'Trash')
+            "
+            class="pageOption"
+          >
             Trash 🗑️
           </button>
         </div>
-        <div pageOptionDiv><button class="pageOption">Drafts 📋</button></div>
         <div pageOptionDiv>
-          <button class="pageOption">Sent 📧</button>
+          <button
+            class="pageOption"
+            @click="
+              (pageOption = 'Drafts 📋'),
+                ChangePage(),
+                (pageNumber = 1),
+                (folderName = 'Draft')
+            "
+          >
+            Drafts 📋
+          </button>
         </div>
-        <div pageOptionDiv><button class="pageOption">Contacts 📔</button></div>
-        <div pageOptionDiv><button class="pageOption">Folders 📁</button></div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="
+              (pageOption = 'Sent 📧'),
+                ChangePage(),
+                (pageNumber = 1),
+                (folderName = 'Sent')
+            "
+          >
+            Sent 📧
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            onclick="window.location.href='/Contacts';"
+          >
+            Contacts 📔
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button class="pageOption" onclick="window.location.href='/Folders';">
+            Folders 📁
+          </button>
+        </div>
       </div>
       <div class="displayColumn">
         <div>
@@ -28,22 +90,12 @@
               Filter
               <div class="subMenu-2">
                 <ul>
-                  <button
-                    class="menuElement"
-                    @click="Filter('subject', 'filterText')"
-                  >
-                    Subject
-                  </button>
-                  <input type="text" id="filterSearchText" value="" />
+                  <button class="menuElement" @click="Filter()">Subject</button>
+                  <input type="text" id="filterSubjectText" />
 
                   <br />
-                  <button
-                    class="menuElement"
-                    @click="Filter('sender', 'filterText')"
-                  >
-                    Sender
-                  </button>
-                  <input type="text" id="filterSearchText" value="" />
+                  <button class="menuElement" @click="Filter()">Sender</button>
+                  <input type="text" id="filterSenderText" />
                 </ul>
               </div>
             </li>
@@ -53,7 +105,8 @@
                 <ul>
                   <button class="menuElement">Priority</button>
                   <button class="menuElement">Date</button>
-                  <button class="menuElement">Type</button>
+                  <button class="menuElement">Sender</button>
+                  <button class="menuElement">Subject</button>
                 </ul>
               </div>
             </li>
@@ -70,29 +123,30 @@
               type="radio"
               id="pageNumberOneOption"
               name="radioButtonPageNumberOption"
-              value="true"
-              @click="pageNumber = 1"
+              value="false"
+              checked="false"
+              @click="(pageNumber = 1), ChangePage()"
             />
             <input
               type="radio"
               id="pageNumberTwoOption"
               name="radioButtonPageNumberOption"
               value="false"
-              @click="pageNumber = 2"
+              @click="(pageNumber = 2), ChangePage()"
             />
             <input
               type="radio"
               id="pageNumbeThreerOption"
               name="radioButtonPageNumberOption"
               value="false"
-              @click="pageNumber = 3"
+              @click="(pageNumber = 3), ChangePage()"
             />
             <input
               type="radio"
               id="pageNumberFourOption"
               name="radioButtonPageNumberOption"
               value="false"
-              @click="pageNumber = 4"
+              @click="(pageNumber = 4), ChangePage()"
             />
           </div>
           <br />
@@ -100,11 +154,10 @@
         <table class="table">
           <tr id="titleRow">
             <td class="checkBoxClass">&nbsp;</td>
-            <td>Sender</td>
-            <td>Subject</td>
-            <td>Priority</td>
-            <td>Date</td>
-            <td>Type</td>
+            <td @click="Sort('Sender')">Sender</td>
+            <td @click="Sort('Subject')">Subject</td>
+            <td @click="Sort('Priority')">Priority</td>
+            <td @click="Sort('Date')">Date</td>
           </tr>
           <tr class="row">
             <td class="rOption">
@@ -116,7 +169,6 @@
             <td class="rOption">{{ subject[0] }}</td>
             <td class="rOption">{{ priority[0] }}</td>
             <td class="rOption">{{ date[0] }}</td>
-            <td class="rOption">{{ type[0] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -124,7 +176,6 @@
             <td class="rOption">{{ subject[1] }}</td>
             <td class="rOption">{{ priority[1] }}</td>
             <td class="rOption">{{ date[1] }}</td>
-            <td class="rOption">{{ type[1] }}</td>
           </tr>
           <tr class="row">
             <td><input type="checkbox" value="0" /></td>
@@ -132,7 +183,6 @@
             <td class="rOption">{{ subject[2] }}</td>
             <td class="rOption">{{ priority[2] }}</td>
             <td class="rOption">{{ date[2] }}</td>
-            <td class="rOption">{{ type[2] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -140,7 +190,6 @@
             <td class="rOption">{{ subject[3] }}</td>
             <td class="rOption">{{ priority[3] }}</td>
             <td class="rOption">{{ date[3] }}</td>
-            <td class="rOption">{{ type[3] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -148,7 +197,6 @@
             <td class="rOption">{{ subject[4] }}</td>
             <td class="rOption">{{ priority[4] }}</td>
             <td class="rOption">{{ date[4] }}</td>
-            <td class="rOption">{{ type[4] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -156,7 +204,6 @@
             <td class="rOption">{{ subject[5] }}</td>
             <td class="rOption">{{ priority[5] }}</td>
             <td class="rOption">{{ date[5] }}</td>
-            <td class="rOption">{{ type[5] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -165,7 +212,6 @@
             <td class="rOption">{{ subject[6] }}</td>
             <td class="rOption">{{ priority[6] }}</td>
             <td class="rOption">{{ date[6] }}</td>
-            <td class="rOption">{{ type[6] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -173,7 +219,6 @@
             <td class="rOption">{{ subject[7] }}</td>
             <td class="rOption">{{ priority[7] }}</td>
             <td class="rOption">{{ date[7] }}</td>
-            <td class="rOption">{{ type[7] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -181,7 +226,6 @@
             <td class="rOption">{{ subject[8] }}</td>
             <td class="rOption">{{ priority[8] }}</td>
             <td class="rOption">{{ date[8] }}</td>
-            <td class="rOption">{{ type[8] }}</td>
           </tr>
           <tr class="row">
             <td class="rOption"><input type="checkbox" value="0" /></td>
@@ -189,7 +233,6 @@
             <td class="rOption">{{ subject[9] }}</td>
             <td class="rOption">{{ priority[9] }}</td>
             <td class="rOption">{{ date[9] }}</td>
-            <td class="rOption">{{ type[9] }}</td>
           </tr>
         </table>
       </div>
@@ -200,120 +243,130 @@
 
 <script>
 import "../filter.js";
+//import compose from "../components/compose";
 const axios = require("axios").default;
 export default {
   name: "MailBox",
+
   data: function () {
     return {
-      pageOption: "Inbox Mail ✉️",
+      pageOption: "Inbox Mail ✉️", //the folder name
       contacts: [null].fill(null),
       sender: [].fill(null),
       subject: [].fill(null),
       priority: [].fill(null),
       date: [].fill(null),
-      type: [].fill(null),
       checkMark: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      filterKey: "null",
-      filterText: "ali",
-      sortKey: "null",
-      searchKey: "null",
+      senderFilterText: "null",
+      subjectFilterText: "null",
+      sortText: "null",
+      searchText: "null",
       pageNumber: 1,
+      folderName: "inbox",
     };
   },
 
   methods: {
-    Filter: function (filterKey, filterText) {
-      this.filterText = filterText;
-      if (filterKey === "subject") {
-        axios
-          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
-          .then((response) => {
-            console.log(response.data);
-            var j = 0;
-            for (
-              var i = (this.pageNumber - 1) * 10;
-              i < this.pageNumber * 10;
-              i++
-            ) {
-              console.log(i);
-              this.$set(this.sender, j, response.data[i].userId);
-              this.$set(this.subject, j, response.data[i].title);
-              this.$set(this.priority, j, response.data[i].title);
-              this.$set(this.date, j, response.data[i].userId);
-              this.$set(this.type, j, response.data[i].userId);
-              j++;
-            }
-            console.log(
-              "from  : " +
-                (this.pageNumber - 1) * 10 +
-                "  to : " +
-                this.pageNumber * 10
-            );
-            console.log("pageNumber is " + this.pageNumber);
-          });
+    //loadong whenevrer the user login immediately
+    /*  SetButtonColorInbox: function () {
+      var prop = document.getElementById("inboxBtn");
+      prop.style.backgroundColor = "#b4b4b4";
+      document.getElementById("trashBtn").style.backgroundColor = "#fff";
+    },
+    SetButtonColorTrash: function () {
+      var prop = document.getElementById("trashBtn");
+      prop.style.backgroundColor = "#b4b4b4";
+      document.getElementById("inoxBtn").style.backgroundColor = "#fff";
+    },
+*/
+    displayCompose: function () {
+      document.getElementById("sendOption").style.display = "block";
+    },
+    ChangePage: function () {
+      //to load the emails
+      axios
+        .get("http://localhost:8080/loadEmails", {
+          params: { page: this.pageNumber, folderName: this.folderName },
+        })
+        .then((response) => {
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            this.$set(this.sender, i, response.data[i].sender);
+            this.$set(this.subject, i, response.data[i].subject);
+            this.$set(this.priority, i, response.data[i].priority);
+            this.$set(this.date, i, response.data[i].date);
+          }
 
-        /*axios
-          .post("http://localhost:8081/filter", "subject")
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-          */
-
-        console.log("subject");
-      } else if (filterKey === "sender") {
-        axios
-          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
-          .then((response) => {
-            console.log(response.data);
-            var j = 0;
-            for (
-              var i = (this.pageNumber - 1) * 10;
-              i < this.pageNumber * 10;
-              i++
-            ) {
-              this.$set(this.sender, j, response.data[i].userId);
-              this.$set(this.subject, j, response.data[i].title);
-              this.$set(this.priority, j, response.data[i].userId);
-              this.$set(this.date, j, response.data[i].userId);
-              this.$set(this.type, j, response.data[i].userId);
-              j++;
-            }
-            console.log(
-              "from  : " +
-                (this.pageNumber - 1) * 10 +
-                "  to : " +
-                this.pageNumber * 10
-            );
-            console.log("pageNumber is " + this.pageNumber);
-          });
-
-        /*
-        axios
-          .post("http://localhost:8081/filter", "sender")
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-          */
-
-        console.log("sender");
-      }
+          console.log("pageNumber is " + this.pageNumber);
+        });
+    },
+    Filter: function () {
+      this.senderFilterText = document.getElementById("filterSenderText").value;
+      this.subjectFilterText = document.getElementById(
+        "filterSubjectText"
+      ).value;
+      console.log(this.senderFilterText + "  " + this.subjectFilterText);
+      axios
+        .get("http://localhost:8080/filterEmails", {
+          params: {
+            filterNameSender: this.senderFilterText,
+            filterNameSubject: this.subjectFilterText,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            console.log(i);
+            this.$set(this.sender, i, response.data[i].sender);
+            this.$set(this.subject, i, response.data[i].subject);
+            this.$set(this.priority, i, response.data[i].priority);
+            this.$set(this.date, i, response.data[i].date);
+          }
+          console.log("pageNumber is " + this.pageNumber);
+        });
     },
 
-    /*
-    Sort: function () {
-      this.$emit(this.sortKey);
-    },
+    Sort: function (sortText) {
+      axios
+        .get("http://localhost:8080/sorter", {
+          params: {
+            sortKey: this.sortText,
+          },
+        })
+        .then((response) => {
+          console.log(sortText);
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            this.$set(this.sender, i, response.data[i].sender);
+            this.$set(this.subject, i, response.data[i].subject);
+            this.$set(this.priority, i, response.data[i].priority);
+            this.$set(this.date, i, response.data[i].date);
+          }
 
-    Search: function () {
-      this.$emit(this.searchKey);
+          console.log("pageNumber is " + this.pageNumber);
+        });
     },
-    */
+    Search: function (searchText) {
+      this.searchKey = document.getElementById("searchText").value;
+      console.log(searchText);
+      axios
+        .get("http://localhost:8080/searcher", {
+          params: {
+            searchKey: this.searchText,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            this.$set(this.sender, i, response.data[i].sender);
+            this.$set(this.subject, i, response.data[i].subject);
+            this.$set(this.priority, i, response.data[i].priority);
+            this.$set(this.date, i, response.data[i].date);
+          }
+
+          console.log("pageNumber is " + this.pageNumber);
+        });
+    },
   },
 
   /* computed: {
@@ -383,6 +436,7 @@ export default {
 }
 
 #sendOption {
+  height: 120px;
   margin-top: 150px;
   border-radius: 20px;
   border: solid;
@@ -399,6 +453,8 @@ export default {
 }
 
 .pageOption {
+  width: 150px;
+  height: 70px;
   border-radius: 20px;
   border: solid;
   color: green;
@@ -461,7 +517,7 @@ export default {
 #pageNumberOptionsDiv {
   line-height: 5px;
   padding-bottom: 4px;
-  margin-top: 95px;
+  margin-top: 140px;
   border-radius: 25px;
   margin-left: 40%;
   width: 100px;
@@ -540,7 +596,12 @@ export default {
   background: whitesmoke;
 }
 
-#filterSearchText {
+#filterSubjectText {
+  background: whitesmoke;
+  border-radius: 10px;
+}
+
+#filterSenderText {
   background: whitesmoke;
   border-radius: 10px;
 }

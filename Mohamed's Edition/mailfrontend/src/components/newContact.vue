@@ -2,7 +2,20 @@
   <div class="main-container">
     <form>
       <div class="box-container">
-        <h2 class="heading">Sign In</h2>
+        <h2 class="heading">New contact</h2>
+        <div class="form-fields">
+          <input
+            id="contactName"
+            name="contactName"
+            type="text"
+            placeholder="the new contact name"
+          />
+        </div>
+        <div class="wrongInput" id="noContact" style="display: none">
+          <span class="somethingWrongSentence"
+            >❗️ You should enter a contact Name</span
+          >
+        </div>
         <div class="form-fields">
           <input
             id="email"
@@ -21,28 +34,19 @@
             >❗️ NOT a valid Email Address</span
           >
         </div>
-        <div class="form-fields">
-          <input
-            id="password"
-            name="password"
-            type="text"
-            placeholder="Password"
-          />
-        </div>
-        <div class="wrongInput" id="noPassword" style="display: none">
-          <span class="somethingWrongSentence"
-            >❗️ You should enter a password</span
-          >
-        </div>
-        <button class="signIn" type="button" @click="signIn()">Sign In</button>
-        <div class="wrongInput" id="wrongInput" style="display: none">
+        <button class="signIn" type="button" v-on:click="newcontact()">
+          Add
+        </button>
+
+        <!--<div class="wrongInput" id="wrongInput" style="display: none">
           <span class="somethingWrongSentence"
             >❗️ Wrong email address or password</span
           >
-        </div>
+        </div>-->
+
         <p class="center">
-          Don't have an account?
-          <a id="createOne" href="/signup"> Create one</a>.
+          Don't wnat to add contact?
+          <a id="createOne" href="/mailbox">go home</a>.
         </p>
       </div>
     </form>
@@ -56,31 +60,26 @@ export default {
   components: {},
   data: function () {
     return {
-      mail: {
+      contact: {
         username: "",
         address: "",
-        password: "",
-        birthDate: "",
-        gender: "",
-        contacts: [],
-        folders: [],
       },
     };
   },
   methods: {
-    signIn: function () {
+    newcontact: function () {
       // Selecting the input mail element and get its value
-      this.mail.address = document.getElementById("email").value;
-      this.mail.password = document.getElementById("password").value;
+      this.contact.address = document.getElementById("email").value;
+      this.contact.username = document.getElementById("contactName").value;
       document.getElementById("noEmailAddress").style = "display: none;";
-      document.getElementById("noPassword").style = "display: none;";
+      document.getElementById("noContact").style = "display: none;";
       var wrong = 0;
-      if (this.mail.address == "") {
+      if (this.contact.address == "") {
         document.getElementById("noEmailAddress").style.display = "block";
         wrong = 1;
       }
-      if (this.mail.password == "") {
-        document.getElementById("noPassword").style.display = "block";
+      if (this.contact.username == "") {
+        document.getElementById("noContact").style.display = "block";
         wrong = 1;
       }
       if (wrong == 0) {
@@ -93,28 +92,20 @@ export default {
             if (response.data == false) {
               document.getElementById("notValidEmailAddress").style.display =
                 "block";
-              console.log("momen");
               return;
             } else {
               document.getElementById("notValidEmailAddress").style =
                 "display: none;";
               axios
-                .get("http://localhost:8080/signIn", {
-                  params: {
-                    email: this.mail.address,
-                    password: this.mail.password,
-                  },
-                })
+                .post("http://localhost:8080/addContact", this.contact)
                 .then((response) => {
                   console.log(response.data);
                   if (response.data == false) {
-                    document.getElementById("wrongInput").style.display =
-                      "block";
+                    //document.getElementById("wrongInput").style.display ="block";
                   } else {
-                    document.getElementById("wrongInput").style =
-                      "display: none;";
+                    //document.getElementById("wrongInput").style ="display: none;";
                     //go to the main interface of the website
-                    window.location.href = "/mailbox";
+                    window.location.href = "/Contacts";
                   }
                 })
                 .catch((e) => {
