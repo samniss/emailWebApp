@@ -51,35 +51,38 @@
             <span>you should enter day</span>
           </div>
         </div>
-        <div class="emailsOperationDiv">
-          <div class="emailsOperationButton">
-            Gender
-            <div class="subMenu-1">
-              <ul id="subMenuDiv">
-                <button class="menuElement">Male 🧑🏻</button>
-                <button class="menuElement">Female 👩🏻</button>
-              </ul>
-            </div>
-          </div>
-        </div>
+
+        <button
+          class="button"
+          type="button"
+          :class="{ disabledButton: grnderMale }"
+          v-on:click="male()"
+        >
+          Male
+        </button>
+        <button
+          class="button"
+          type="button"
+          :class="{ disabledButton: grnderfemale }"
+          v-on:click="female()"
+        >
+          Female
+        </button>
+
         <div class="wrongInput" id="nogender" style="display: none">
           <span>you should select your gender</span>
         </div>
         <div class="login-choice"><span>....</span></div>
-        <div class="form-fields">
-          <button class="createaccount" type="button" v-on:click="signUp()">
-            Submit
-          </button>
-        </div>
+        <button class="createaccount" type="button" v-on:click="signUp()">
+          Submit
+        </button>
         <div class="wrongInput" id="usedAddress" style="display: none">
           <span>that emai is used before</span>
         </div>
-        <div class="AlreadyHaveAnAccountDiv">
-          <p class="center">
-            Already have an account?
-            <a id="signInButton" href="/login"> Sign In</a>
-          </p>
-        </div>
+        <p class="center">
+          Already have an account?
+          <a id="signInButton" href="/signIn"> Sign In</a>
+        </p>
       </div>
     </form>
   </div>
@@ -98,20 +101,27 @@ export default {
         address: "",
         password: "",
         birthDate: "",
-        gender: "",
+        gender: "male",
         contacts: [],
         folders: [],
       },
     };
   },
   methods: {
+    male: function () {
+      this.mail.gender = "male";
+      document.getElementById("nogender").style = "display: none;";
+    },
+    female: function () {
+      this.mail.gender = "female";
+      document.getElementById("nogender").style = "display: none;";
+    },
     signUp: function () {
       // Selecting the input mail element and get its value
       this.mail.username = "";
       this.mail.address = "";
       this.mail.password = "";
       this.mail.birthDate = "";
-      this.mail.gender = "";
       this.mail.username = document.getElementById("userName").value;
       this.mail.address = document.getElementById("email").value;
       this.mail.password = document.getElementById("password").value;
@@ -122,7 +132,6 @@ export default {
         "-",
         document.getElementById("day").value
       );
-      this.mail.gender = document.getElementById("dropdownlist").value;
       document.getElementById("noFullName").style = "display: none;";
       document.getElementById("noEmailAddress").style = "display: none;";
       document.getElementById("noPassword").style = "display: none;";
@@ -169,6 +178,7 @@ export default {
             } else {
               document.getElementById("usedAddress").style = "display: none;";
               //go to the main interface of the website
+              window.location.href = "/mailbox";
             }
           })
           .catch((e) => {
