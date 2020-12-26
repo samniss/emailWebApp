@@ -2,77 +2,97 @@
   <div class="MailBox">
     <div class="page">
       <div class="optionsColumn">
-        <button id="NewFolderOption">New Folder ➕</button>
+        <button id="RenameFolderOption" @click="MakeFolder()">
+          Make Folder
+        </button>
+        <input id="FolderText" type="text" placeholder="Folder Name" />
         <div pageOptionDiv>
           <button
             id="inboxBtn"
-            @click="
-              //SetButtonColorInbox(),
-              (pageOption = 'Inbox Mail ✉️'),
-                ChangePage(),
-                (pageNumber = 1),
-                (document.getElementById('pageNumberOneOption').value = true),
-                (document.getElementById('pageNumberOneOption').checked = true),
-                console.log('pageNumber')
-            "
+            @click="ChangePage(), (pageNumber = 1), (folderName = 'folder1')"
             class="pageOption"
           >
-            Folder 1
+            {{ this.FolderNamesArray[0] }}
           </button>
           <button
             id="inboxBtn"
             @click="
               //SetButtonColorInbox(),
-              (pageOption = 'Inbox Mail ✉️'),
-                ChangePage(),
-                (pageNumber = 1),
-                (document.getElementById('pageNumberOneOption').value = true),
-                (document.getElementById('pageNumberOneOption').checked = true),
-                console.log('pageNumber')
+              ChangePage(), (pageNumber = 1), (folderName = 'folder2')
             "
             class="pageOption"
           >
-            Folder 2
+            {{ this.FolderNamesArray[1] }}
           </button>
         </div>
         <div pageOptionDiv>
           <button
-            id="trashBtn"
             @click="
               // SetButtonColorTrash(),
-              (pageOption = 'Trash Box🗑️'),
-                (pageNumber = 1),
-                ChangePage(),
-                (document.getElementById('pageNumberOneOption').value = true),
-                (document.getElementById('pageNumberOneOption').checked = true),
-                console.log('pageNumber')
+
+              (pageNumber = 1), ChangePage(), (folderName = 'folder3')
             "
             class="pageOption"
           >
-            Folder 3
-          </button>
-        </div>
-        <div pageOptionDiv><button class="pageOption">Folder 4</button></div>
-        <div pageOptionDiv>
-          <button
-            class="pageOption"
-            @click="(pageOption = 'Sent 📧'), ChangePage()"
-          >
-            Folder 5
+            {{ this.FolderNamesArray[2] }}
           </button>
         </div>
         <div pageOptionDiv>
           <button
             class="pageOption"
-            onclick="window.location.href='/Contacts';"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder4')"
           >
-            Folder 6
+            {{ this.FolderNamesArray[3] }}
           </button>
         </div>
-        <div pageOptionDiv><button class="pageOption">Folder 7</button></div>
-        <div pageOptionDiv><button class="pageOption">Folder 8</button></div>
-        <div pageOptionDiv><button class="pageOption">Folder 9</button></div>
-        <div pageOptionDiv><button class="pageOption">Folder 10</button></div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder5')"
+          >
+            {{ this.FolderNamesArray[4] }}
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder6')"
+          >
+            {{ this.FolderNamesArray[5] }}
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder7')"
+          >
+            {{ this.FolderNamesArray[6] }}
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder8')"
+          >
+            {{ this.FolderNamesArray[7] }}
+          </button>
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder9')"
+          >
+            {{ this.FolderNamesArray[8] }}</button
+          >ta
+        </div>
+        <div pageOptionDiv>
+          <button
+            class="pageOption"
+            @click="(pageNumber = 1), ChangePage(), (folderName = 'folder10')"
+          >
+            {{ this.FolderNamesArray[9] }}
+          </button>
+        </div>
       </div>
       <div class="displayColumn">
         <div>
@@ -122,7 +142,7 @@
           </tr>
           <tr class="row">
             <td class="rOption">
-              <input type="checkbox" value="0" @click="checkMark[0] = 1" />
+              <input type="radio" name="FolderOption" value="false" />
             </td>
             <td class="rOption">
               {{ sender[0] }}
@@ -132,42 +152,52 @@
             <td class="rOption">{{ date[0] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[1] }}</td>
             <td class="rOption">{{ subject[1] }}</td>
             <td class="rOption">{{ priority[1] }}</td>
             <td class="rOption">{{ date[1] }}</td>
           </tr>
           <tr class="row">
-            <td><input type="checkbox" value="0" /></td>
+            <td><input type="radio" name="FolderOption" value="false" /></td>
             <td class="rOption">{{ sender[2] }}</td>
             <td class="rOption">{{ subject[2] }}</td>
             <td class="rOption">{{ priority[2] }}</td>
             <td class="rOption">{{ date[2] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[3] }}</td>
             <td class="rOption">{{ subject[3] }}</td>
             <td class="rOption">{{ priority[3] }}</td>
             <td class="rOption">{{ date[3] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[4] }}</td>
             <td class="rOption">{{ subject[4] }}</td>
             <td class="rOption">{{ priority[4] }}</td>
             <td class="rOption">{{ date[4] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[5] }}</td>
             <td class="rOption">{{ subject[5] }}</td>
             <td class="rOption">{{ priority[5] }}</td>
             <td class="rOption">{{ date[5] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
 
             <td class="rOption">{{ sender[6] }}</td>
             <td class="rOption">{{ subject[6] }}</td>
@@ -175,21 +205,27 @@
             <td class="rOption">{{ date[6] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[7] }}</td>
             <td class="rOption">{{ subject[7] }}</td>
             <td class="rOption">{{ priority[7] }}</td>
             <td class="rOption">{{ date[7] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[8] }}</td>
             <td class="rOption">{{ subject[8] }}</td>
             <td class="rOption">{{ priority[8] }}</td>
             <td class="rOption">{{ date[8] }}</td>
           </tr>
           <tr class="row">
-            <td class="rOption"><input type="checkbox" value="0" /></td>
+            <td class="rOption">
+              <input type="radio" name="FolderOption" value="false" />
+            </td>
             <td class="rOption">{{ sender[9] }}</td>
             <td class="rOption">{{ subject[9] }}</td>
             <td class="rOption">{{ priority[9] }}</td>
@@ -209,41 +245,89 @@ export default {
   name: "MailBox",
   data: function () {
     return {
-      pageOption: "Inbox Mail ✉️", //the folder name
-      contacts: [null].fill(null),
       sender: [].fill(null),
       subject: [].fill(null),
       priority: [].fill(null),
       date: [].fill(null),
-      type: [].fill(null),
       checkMark: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      filterKey: "null",
-      filterText: "ali",
-      sortKey: "null",
-      searchKey: "null",
-      pageNumber: 1,
+      folderName: "Empty",
+      FolderNamesArray: [
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+        "Empty",
+      ],
+      FolderPointer: 0,
     };
   },
 
   methods: {
     //loadong whenevrer the user login immediately
-    SetButtonColorInbox: function () {
-      var prop = document.getElementById("inboxBtn");
-      prop.style.backgroundColor = "#b4b4b4";
-      document.getElementById("trashBtn").style.backgroundColor = "#fff";
+    MakeFolder: function () {
+      if (this.FolderPointer < 11) {
+        //build folders
+        if (document.getElementById("FolderText").value.length > 0) {
+          this.$set(
+            this.FolderNamesArray,
+            this.FolderPointer,
+            document.getElementById("FolderText").value
+          );
+          this.FolderPointer++;
+          console.log(this.FolderNamesArray[this.FolderPointer]);
+          axios
+            .get("http://localhost:8080/addFolders", {
+              params: { folderName: "Empty" },
+            })
+            .then((response) => {
+              console.log(response.data);
+              if (response.data === true) {
+                var v = new FormData();
+                v.append("oldName", "Empty");
+                v.append(
+                  "newName",
+                  document.getElementById("FolderText").value
+                );
+                axios
+                  .put("http://localhost:8080/updateFolderName", v)
+                  .then((response) => {
+                    console.log(response.data);
+                  });
+              }
+            });
+        }
+      } else {
+        //Rename Folder
+        if (document.getElementById("FolderText").value.length > 0) {
+          var v = new FormData();
+          v.append("oldName", this.FolderNamesArray[this.FolderPointer]);
+          v.append("newName", document.getElementById("FolderText").value);
+          axios
+            .put("http://localhost:8080/updateFolderName", v)
+            .then((response) => {
+              console.log(response.data);
+            });
+          this.$set(
+            this.FolderNamesArray,
+            this.FolderPointer % 10,
+            document.getElementById("FolderText").value
+          );
+          this.FolderPointer++;
+          console.log(this.FolderNamesArray[this.FolderPointer]);
+        }
+      }
     },
-    SetButtonColorTrash: function () {
-      var prop = document.getElementById("trashBtn");
-      prop.style.backgroundColor = "#b4b4b4";
-      document.getElementById("inoxBtn").style.backgroundColor = "#fff";
-    },
-
     ChangePage: function () {
       //to load the emails
       axios
-        .get("http://localhost:8080/loadEmails", {
-          params: { page: this.pageNumber, folderName: this.pageOption },
-        }) //just to test the axios functionality //"https://jsonplaceholder.typicode.com/posts"
+        .get("http://localhost:8080/Folders", {
+          params: { page: this.pageNumber, folderName: this.folderName },
+        })
         .then((response) => {
           console.log(response.data);
           var j = 0;
@@ -269,106 +353,7 @@ export default {
           console.log("pageNumber is " + this.pageNumber);
         });
     },
-    Filter: function (filterKey, filterText) {
-      this.filterText = filterText;
-      if (filterKey === "subject") {
-        axios
-          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality "http://localhost:8080/filter"
-          .then((response) => {
-            console.log(response.data);
-            var j = 0;
-            for (
-              var i = (this.pageNumber - 1) * 10;
-              i < this.pageNumber * 10;
-              i++
-            ) {
-              console.log(i);
-              this.$set(this.sender, j, response.data[i].userId);
-              this.$set(this.subject, j, response.data[i].title);
-              this.$set(this.priority, j, response.data[i].title);
-              this.$set(this.date, j, response.data[i].userId);
-              this.$set(this.type, j, response.data[i].userId);
-              j++;
-            }
-            console.log(
-              "from  : " +
-                (this.pageNumber - 1) * 10 +
-                "  to : " +
-                this.pageNumber * 10
-            );
-            console.log("pageNumber is " + this.pageNumber);
-          });
-
-        /*axios
-          .post("http://localhost:8080/filter", "subject")
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-          */
-
-        console.log("subject");
-      } else if (filterKey === "sender") {
-        axios
-          .get("https://jsonplaceholder.typicode.com/posts") //just to test the axios functionality
-          .then((response) => {
-            console.log(response.data);
-            var j = 0;
-            for (
-              var i = (this.pageNumber - 1) * 10;
-              i < this.pageNumber * 10;
-              i++
-            ) {
-              this.$set(this.sender, j, response.data[i].userId);
-              this.$set(this.subject, j, response.data[i].title);
-              this.$set(this.priority, j, response.data[i].userId);
-              this.$set(this.date, j, response.data[i].userId);
-              this.$set(this.type, j, response.data[i].userId);
-              j++;
-            }
-            console.log(
-              "from  : " +
-                (this.pageNumber - 1) * 10 +
-                "  to : " +
-                this.pageNumber * 10
-            );
-            console.log("pageNumber is " + this.pageNumber);
-          });
-
-        /*
-        axios
-          .post("http://localhost:8081/filter", "sender")
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-          */
-
-        console.log("sender");
-      }
-    },
-
-    /*
-    Sort: function () {
-      this.$emit(this.sortKey);
-    },
-
-    Search: function () {
-      this.$emit(this.searchKey);
-    },
-    */
   },
-
-  /* computed: {
-    showSubject: function () {
-      return this.sender[0].userId;
-    },
-  },
-  */
 };
 </script>
 <style  scoped>
@@ -429,7 +414,7 @@ export default {
   height: 1000px;
 }
 
-#NewFolderOption {
+#RenameFolderOption {
   height: 120px;
   margin-top: 150px;
   border-radius: 20px;
@@ -438,7 +423,6 @@ export default {
   background: rgb(236, 139, 139);
   font-size: 40px;
   font-weight: bold;
-  margin-bottom: 30px;
   margin-top: 20px;
 }
 
@@ -517,5 +501,13 @@ export default {
   width: 100px;
   color: rgb(29, 201, 6);
   border: solid;
+}
+
+#FolderText {
+  background: rgb(134, 191, 241);
+  border: solid;
+  border-radius: 15px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 </style>

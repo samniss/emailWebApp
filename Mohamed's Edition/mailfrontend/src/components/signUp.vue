@@ -72,7 +72,6 @@
         <div class="wrongInput" id="nogender" style="display: none">
           <span>you should select your gender</span>
         </div>
-        <div class="login-choice"><span>....</span></div>
         <button class="createaccount" type="button" v-on:click="signUp()">
           Submit
         </button>
@@ -101,7 +100,7 @@ export default {
         address: "",
         password: "",
         birthDate: "",
-        gender: "male",
+        gender: "",
         contacts: [],
         folders: [],
       },
@@ -139,6 +138,9 @@ export default {
       document.getElementById("noMonth").style = "display: none;";
       document.getElementById("noDay").style = "display: none;";
       document.getElementById("nogender").style = "display: none;";
+      console.log(
+        Number.isInteger(parseFloat(document.getElementById("year").value))
+      );
       var wrong = 0;
       if (this.mail.username == "") {
         document.getElementById("noFullName").style.display = "block";
@@ -156,13 +158,50 @@ export default {
         document.getElementById("noYear").style.display = "block";
         wrong = 1;
       }
+      if (
+        !Number.isInteger(parseFloat(document.getElementById("year").value))
+      ) {
+        document.getElementById("noYear").style.display = "block";
+        wrong = 1;
+      } else {
+        if (parseFloat(document.getElementById("year").value) <= 0) {
+          document.getElementById("noYear").style.display = "block";
+          wrong = 1;
+        }
+      }
       if (document.getElementById("month").value == "") {
         document.getElementById("noMonth").style.display = "block";
         wrong = 1;
       }
+      if (
+        !Number.isInteger(parseFloat(document.getElementById("month").value))
+      ) {
+        document.getElementById("noMonth").style.display = "block";
+        wrong = 1;
+      } else {
+        if (
+          parseFloat(document.getElementById("month").value) <= 0 ||
+          parseFloat(document.getElementById("month").value) > 12
+        ) {
+          document.getElementById("noMonth").style.display = "block";
+          wrong = 1;
+        }
+      }
       if (document.getElementById("day").value == "") {
         document.getElementById("noDay").style.display = "block";
         wrong = 1;
+      }
+      if (!Number.isInteger(parseFloat(document.getElementById("day").value))) {
+        document.getElementById("noDay").style.display = "block";
+        wrong = 1;
+      } else {
+        if (
+          parseFloat(document.getElementById("day").value) <= 0 ||
+          parseFloat(document.getElementById("day").value) > 30
+        ) {
+          document.getElementById("noDay").style.display = "block";
+          wrong = 1;
+        }
       }
       if (this.mail.gender == "") {
         document.getElementById("nogender").style.display = "block";
@@ -195,7 +234,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
 }
-
 /* Style the tab */
 .tab {
   overflow: hidden;
@@ -281,7 +319,6 @@ body {
   padding: 0 5px;
   font-size: 14px;
 }
-
 .display {
   width: 100%;
   line-height: 40px;
@@ -324,7 +361,6 @@ body {
   border-radius: 20px;
   background: linear-gradient(rgb(58, 186, 224), rgb(59, 135, 223));
 }
-
 .login-choice span {
   color: #5b6987;
   margin-bottom: 10px;
@@ -428,11 +464,9 @@ body {
   background: rgb(235, 74, 74);
   height: 30px;
 }
-
 .emailsOperationButton:hover {
   background: rgb(50, 230, 74);
 }
-
 .subMenu-1 {
   display: none;
   margin-top: -12px;
@@ -442,24 +476,20 @@ body {
   border-radius: 20px;
   background: rgb(235, 74, 74);
 }
-
 .emailsOperationButton:hover .subMenu-1 {
   display: block;
 }
-
 .AlreadyHaveAnAccountDiv {
   color: #000000;
   border: solid;
   border-radius: 10px;
   background: rgb(233, 63, 51);
 }
-
 #signInButton {
   margin-left: 2px;
   color: #ffffff;
   background: rgb(233, 63, 51);
 }
-
 .menuElement {
   margin-top: 0px;
   float: left;
@@ -471,7 +501,6 @@ body {
 .emailsOperationButton :hover {
   background: rgb(44, 149, 156);
 }
-
 #subMenuDiv {
   color: #15cd72;
   background: #15cd72;

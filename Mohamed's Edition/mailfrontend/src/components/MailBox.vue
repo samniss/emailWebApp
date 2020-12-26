@@ -103,10 +103,18 @@
               Sort
               <div class="subMenu-1">
                 <ul>
-                  <button class="menuElement">Priority</button>
-                  <button class="menuElement">Date</button>
-                  <button class="menuElement">Sender</button>
-                  <button class="menuElement">Subject</button>
+                  <button class="menuElement" @click="sortText = 'Priority'">
+                    Priority
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Date'">
+                    Date
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Sender'">
+                    Sender
+                  </button>
+                  <button class="menuElement" @click="sortText = 'Subject'">
+                    Subject
+                  </button>
                 </ul>
               </div>
             </li>

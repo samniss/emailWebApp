@@ -5,7 +5,7 @@
       <div id="timeDiv">current time: {{ date }}</div>
       <br />
       <br />
-      <select v-model="selected">
+      <select v-model="selected" id="dropDownMenu">
         <option disabled value="">Please select one</option>
         <option>1</option>
         <option>2</option>
@@ -190,5 +190,11 @@ export default {
   border-radius: 30px;
   border-color: aliceblue;
   background: #e943e9a8;
+}
+
+#dropDownMenu {
+  background: #faa8b3a8;
+  color: rgb(248, 99, 39);
+  margin-bottom: 10px;
 }
 </style>
