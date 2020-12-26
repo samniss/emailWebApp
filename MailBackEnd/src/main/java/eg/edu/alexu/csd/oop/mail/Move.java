@@ -83,7 +83,7 @@ public class Move {
         //Create a new Arraylist with the dates of the emails only
 
         ArrayList<LocalDateTime> emailDates=new ArrayList<LocalDateTime>();
-        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
         for(int i=0;i< emailNames.size();i++){
             emailDates.add(LocalDateTime.parse(emailNames.get(i).substring(0, emailNames.get(i).indexOf(userEmailAddress)),dtf));
         }

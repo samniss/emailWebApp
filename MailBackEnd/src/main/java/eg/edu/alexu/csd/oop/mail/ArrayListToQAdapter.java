@@ -3,7 +3,7 @@ package eg.edu.alexu.csd.oop.mail;
 import java.util.ArrayList;
 
 public class ArrayListToQAdapter implements ArrayListToQ {
-    ArrayListToQAdaptee adaptee;
+    private  ArrayListToQAdaptee adaptee;
     public ArrayListToQAdapter (ArrayListToQAdaptee a){
         this .adaptee=a;
     }

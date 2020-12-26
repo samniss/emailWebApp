@@ -25,6 +25,8 @@ public class MailBackEndApplication {
 	private FilterSubject fsub=new FilterSubject();
 	private AndFilter af=new AndFilter(fsend,fsub);
 	private String userEmailAddress="";
+	private String currentEmailName="";
+
 
 	public String getUserEmailAddress() {
 		return userEmailAddress;
@@ -62,7 +64,7 @@ public static synchronized MailBackEndApplication getInstance(){
 		return instance;
 }
 
-	public void save( String mailJson, MultipartFile[] attachments,ArrayList<String> receivers) {
+	public boolean save( String mailJson, MultipartFile[] attachments,ArrayList<String> receivers) {
 		Email email = new Email();
 		ObjectMapper mapper=new ObjectMapper();
 		try {
@@ -70,11 +72,23 @@ public static synchronized MailBackEndApplication getInstance(){
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		ArrayListToQ ad=new ArrayListToQAdapter(new ArrayListToQAdaptee());
-		email.setReceiver(ad.changeToQ(receivers));
-		email.setDate(email.millisToDate(email.getDate()));
-		email.setSender(userEmailAddress);
-		s.saveEmail(email, attachments);
+		boolean right=true;
+		for(int i=0;i<receivers.size();i++){
+			right=folder.checkExistUsername(receivers.get(i));
+			if(right==false){
+				break;
+			}
+		}
+		if(right==true) {
+			ArrayListToQ ad = new ArrayListToQAdapter(new ArrayListToQAdaptee());
+			email.setReceiver(ad.changeToQ(receivers));
+			email.setDate(email.millisToDate(email.getDate()));
+			email.setSender(userEmailAddress);
+
+
+			s.saveEmail(email, attachments);
+		}
+		return right;
 	}
 
 	public ArrayList<Email> loadEmails(int page) {
@@ -202,13 +216,11 @@ public static synchronized MailBackEndApplication getInstance(){
 					return false;//that name is existing
 				} else {
 					File user = new File("System/" + "/" + address);
-					File Contact = new File("System/" + address + "/Contact");
 					File Draft = new File("System/" + address + "/Draft");
 					File Inbox = new File("System/" + address + "/Inbox");
 					File Sent = new File("System/" + address + "/Sent");
 					File Trash = new File("System/" + address + "/Trash");
 					user.mkdir();
-					Contact.mkdir();
 					Draft.mkdir();
 					Inbox.mkdir();
 					Sent.mkdir();
@@ -218,7 +230,7 @@ public static synchronized MailBackEndApplication getInstance(){
 					s.saveUserData(u);
 					ObjectMapper om = new ObjectMapper();
 					try {
-						om.writeValue(Paths.get("System/" + address + "/Contact" + "\\emailNames.json").toFile(), new ArrayList<Contact>());
+						om.writeValue(Paths.get("System/" + address + "\\contacts.json").toFile(), new ArrayList<Contact>());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -322,18 +334,36 @@ public static synchronized MailBackEndApplication getInstance(){
 		}
 		return part;
 	}
+	public Email getCurrentEmailName() {
+		for (int i=0;i<emailsInsidMe.size();i++){
+			if ((emailsInsidMe.get(i).getDate()+emailsInsidMe.get(i).getSender()).equals(currentEmailName)){
+				return emailsInsidMe.get(i);
+			}
+		}
+		return null;
+	}
+
+	public void setCurrentEmailName(String c) {
+		this.currentEmailName = c;
+		System.out.println(this.currentEmailName);
+	}
+
 	public ArrayList<Email> searchEmailBack(String searchKey){
 		return Search.search(emailsInsidMe, searchKey);
 	}
 	public ArrayList<Email> sortEmailBack(String sortKey){
+		ArrayList<Email> copy=new ArrayList<Email>();
+		for(int i=0;i<emailsInsidMe.size();i++){
+			copy.add(emailsInsidMe.get(i));
+		}
 		if(sortKey.equals("Priority")){
-			return Sort.getEmailsSortedByPriority(emailsInsidMe);
+			return Sort.getEmailsSortedByPriority(copy);
 		}else if(sortKey.equals("Subject")){
-			return Sort.getEmailsSortedBySubject(emailsInsidMe);
+			return Sort.getEmailsSortedBySubject(copy);
 		}else if(sortKey.equals("Sender")){
-			return Sort.getEmailsSortedBySender(emailsInsidMe);
+			return Sort.getEmailsSortedBySender(copy);
 		}else {
-			return Sort.getEmailsSortedByDate(emailsInsidMe);
+			return Sort.getEmailsSortedByDate(copy);
 		}
 	}
 }

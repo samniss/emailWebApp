@@ -31,15 +31,15 @@ public class Sort {
     public static Comparator<Email> priorityComparator = new Comparator<Email>(){
         @Override
         public int compare(Email firstEmail,Email secondEmail){
-            return (secondEmail.getPriority() < firstEmail.getPriority() ? -1 :
-                    (secondEmail.getPriority() == firstEmail.getPriority()) ? 0 : 1);
+            return (secondEmail.getPriority() < firstEmail.getPriority() ? 1 :
+                    (secondEmail.getPriority() == firstEmail.getPriority()) ? 0 : -1);
         }
     };
 
     public static Comparator<Email> dateComparator = new Comparator<Email>(){
         @Override
         public int compare(Email firstEmail,Email secondEmail){
-            DateTimeFormatter dtf= DateTimeFormatter.ofPattern(" yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dtf= DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
             LocalDateTime firstEmailLDT = LocalDateTime.parse(firstEmail.getDate(), dtf);
             LocalDateTime secondEmailLDT = LocalDateTime.parse(secondEmail.getDate(), dtf);
             return firstEmailLDT.compareTo(secondEmailLDT);

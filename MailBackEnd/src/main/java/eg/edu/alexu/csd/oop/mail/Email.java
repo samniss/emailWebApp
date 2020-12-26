@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class Email {
 	private boolean Check = false;
 	private String Sender;
-	private LinkedBasedQ Receiver=new LinkedBasedQ();//Number of receivers won't exceed 1000
+	private LinkedBasedQ Receiver=new LinkedBasedQ();
 	private String Subject; 
 	private String Date;
 	private String Content; //text
 	private boolean Draft;//A boolean which indicates if the email is saved as draft
-	private int Priority; // using adapter design pattern
+	private int Priority;
 
 	private ArrayList<String> attachments=new ArrayList<String>();
 

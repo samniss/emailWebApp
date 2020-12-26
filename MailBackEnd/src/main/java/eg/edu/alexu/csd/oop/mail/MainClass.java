@@ -1,8 +1,11 @@
 package eg.edu.alexu.csd.oop.mail;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +14,7 @@ import java.io.File;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -21,11 +25,8 @@ public class MainClass {
    static MailBackEndApplication main=MailBackEndApplication.getInstance();
 
     public static void main(String args[]) {
-        long timeInMillis = 1567109422*1000L;
-        Instant instant = Instant.ofEpochMilli(timeInMillis);
-        LocalDateTime date = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        System.out.println(date.format(dtf));
+
+        SpringApplication.run(MainClass.class,args);
     }
     @GetMapping("/checkValidAddress")
     public boolean checkValidAddress(@RequestParam(value = "email",defaultValue = "") String mail){
@@ -50,36 +51,16 @@ public class MainClass {
         return main.signUp((String)map.get("username"),(String)map.get("address"),(String)map.get("password"),(String)map.get("birthDate"),(String)map.get("gender"));
     }
     @PostMapping("/saveEmail")
-    public void save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments,@RequestParam("receivers") ArrayList<String> receivers) {
+    public boolean save(@RequestParam("mail") String mailJson, @RequestParam("attachments") MultipartFile[] attachments,@RequestParam("receivers") ArrayList<String> receivers) {
 
-        main.save(mailJson,attachments,receivers);
+       return  main.save(mailJson,attachments,receivers);
     }
 
-    @RequestMapping({"/loadEmails"})
+    @GetMapping({"/loadEmails"})
     public ArrayList<Email> loadEmails(@RequestParam("page") int page,@RequestParam("folderName") String folderName) {
         main.setFolderName(folderName);
         main.setMails(main.loadEmails(page));
         return main.getMails();
-    }
-
-    @RequestMapping({"/loadFolders"})
-    public ArrayList<File> loadFolders(@RequestParam("page") int page) {
-        return main.loadFolders(page);
-    }
-
-    @PostMapping({"/addFolders"})
-    public boolean addFolder(@RequestParam("folderName") String  folderName) {
-        return main.addFolder(folderName);
-    }
-
-    @DeleteMapping({"/deleteFolder"})
-    public boolean deleteFolder(@RequestParam("folderName") String  folderName) {
-        return main.deleteFolder(folderName);
-    }
-
-    @PutMapping({"/updateFolderName"})
-    public boolean updateFolderName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
-        return main.updateFolderName(oldName,newName);
     }
 
     @GetMapping("/downloadAttachment")
@@ -115,7 +96,12 @@ public class MainClass {
     }
     @PutMapping({"/updateContactName"})
     public boolean updateContactName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
-        return main.updateContactName(oldName,newName);
+        if(!oldName.equals(newName)) {
+            return main.updateContactName(oldName, newName);
+        }
+        else {
+            return true;//Won't do anything because the old name and the new name are the same
+        }
     }
     @PutMapping({"/updateContactEmail"})
     public boolean updateContactEmail(@RequestParam("contactName") String contactName,@RequestParam("oldEmailAddress")String oldEmailAddress,@RequestParam("newEmailAddress") String newEmailAddress){
@@ -126,7 +112,7 @@ public class MainClass {
         return main.filterBoth(filterNameSender, filterNameSubject);
     }
     @GetMapping("/loadContacts")
-    public List<Contact> loadContacts(int page){
+    public List<Contact> loadContacts(@RequestParam("pageNum") int page){
         return main.loadContacts(page);
     }
     @GetMapping("/searcher")
@@ -138,5 +124,36 @@ public class MainClass {
         return main.sortEmailBack(sortKey);
     }
 
+    @RequestMapping({"/loadFolders"})
+    public ArrayList<File> loadFolders(@RequestParam("page") int page) {
+        return main.loadFolders(page);
     }
+
+    @GetMapping({"/addFolders"})
+    public boolean addFolder(@RequestParam("folderName") String  folderName) {
+        return main.addFolder(folderName);
+    }
+
+    @DeleteMapping({"/deleteFolder"})
+    public boolean deleteFolder(@RequestParam("folderName") String  folderName) {
+        return main.deleteFolder(folderName);
+    }
+
+    @PutMapping({"/updateFolderName"})
+    public boolean updateFolderName(@RequestParam("oldName") String oldName,@RequestParam("newName") String newName){
+        return main.updateFolderName(oldName,newName);
+    }
+    @PostMapping("/setCurrentEmail")
+    public void setCurrentEmail(@RequestParam("currentEmail")String currentEmail){
+        main.setCurrentEmailName(currentEmail);
+    }
+    @GetMapping("/getCurrentEmail")
+    public Email getCurrentEmail(){
+        return main.getCurrentEmailName();
+    }
+
+
+}
+
+
 
