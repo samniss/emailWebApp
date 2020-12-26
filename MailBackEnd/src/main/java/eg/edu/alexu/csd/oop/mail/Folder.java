@@ -61,13 +61,23 @@ public class Folder {
 		return false;
 	}
 	public boolean checkPassword(String userName, String password) {
-		//JSON parser object to parse read file
-		Load l=new Load();
-		User u=l.loadUserInfo(userName);
-		if (u.getPassword().equals(password)){
-			return true;
+		if (userName!=null&&password!=null) {
+			if (userName!=""&&password!="") {
+				//JSON parser object to parse read file
+				Load l = new Load();
+				User u = l.loadUserInfo(userName);
+				if (u.getPassword().equals(password)) {
+					return true;
+				}
+				return false;
+			}
+			else {
+				return false;
+			}
 		}
-		return false;
+		else {
+			return false;
+		}
 	}
 	////////////////////////////////////////////////////
 
